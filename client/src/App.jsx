@@ -1,25 +1,29 @@
 import { React, useState } from "react";
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import LoginPage from "./pages/Login";
-import RegisterPage from "./pages/Register";
-import Home from "./pages/Home";
-import Dashboard from "./pages/Dashboard";
-import NotFound from "./pages/NotFound";
-import Routine from "./pages/Routine";
-import RoutineDnD from "./pages/RoutineDnD";
-import MockTestSelect from "./pages/MockTestSelect ";
-import MockResult from "./pages/MockResult";
-import MockExam from "./pages/MockExam";
-import MockSetup from "./pages/MockSetup";
-import Leaderboard from "./pages/LeaderBoard";
-import Notice from "./pages/Notice";
-import QuestionBank from "./pages/QuestionBank";
-import DailyChallenge from "./pages/DailyChallenge";
-import MistakeBank from "./pages/MistakeBank";
-import ResultAnalysis from "./pages/ResultAnalysis";
-import WeaknessPage from "./pages/WeaknessPage";
-import ForumPage from "./pages/ForumPage";
+import Home from "./pages/HomePage/Home";
+import NotFound from "./pages/NotFound/NotFound";
+import LoginPage from "./pages/LoginPage/Login";
+import RegisterPage from "./pages/RegisterPage/Register";
+import Dashboard from "./pages/Dashboard/Dashboard";
+import Routine from "./pages/Routine/Routine";
+import RoutineDnD from "./pages/Routine/RoutineDnD";
+import MockTestSelect from "./pages/MockTest/MockTestSelect";
+import MockSetup from "./pages/MockTest/MockSetup";
+import MockExam from "./pages/MockTest/MockExam";
+import MockResult from "./pages/MockTest/MockResult";
+import Leaderboard from "./pages/Leaderboard/Leaderboard";
+import Notice from "./pages/Notice/Notice";
+import DailyChallenge from "./pages/DailyChallenge/DailyChallenge";
+import MistakeBank from "./pages/MistakeBank/MistakeBank";
+import ResultAnalysis from "./pages/Result/ResultAnalysis";
+import WeaknessPage from "./pages/Weakness/WeaknessPage";
+import ForumPage from "./pages/ForumPage/ForumPage";
+import UniversitySelect from "./pages/QuestionBank/UniversitySelect";
+import UnitSelect from "./pages/QuestionBank/UnitSelect";
+import YearSelect from "./pages/QuestionBank/YearSelect";
+import QuestionDisplay from "./pages/QuestionBank/QuestionDisplay";
+
 function App() {
   return (
     <Router>
@@ -37,12 +41,21 @@ function App() {
         <Route path="/mock-result/:id" element={<MockResult />} />
         <Route path="/leaderboard" element={<Leaderboard />} />
         <Route path="/notices" element={<Notice />} />
-        <Route path="/question-bank" element={<QuestionBank />} />
         <Route path="/daily-challenge" element={<DailyChallenge />} />
         <Route path="/mistake-bank" element={<MistakeBank />} />
         <Route path="/results" element={<ResultAnalysis />} />
         <Route path="/weakness" element={<WeaknessPage />} />
         <Route path="/forum" element={<ForumPage />} />
+        <Route path="/questionbank" element={<UniversitySelect />} />
+        <Route path="/questionbank/:university" element={<UnitSelect />} />
+        <Route
+          path="/questionbank/:university/:unit"
+          element={<YearSelect />}
+        />
+        <Route
+          path="/questionbank/:university/:unit/:year"
+          element={<QuestionDisplay />}
+        />
       </Routes>
     </Router>
   );
