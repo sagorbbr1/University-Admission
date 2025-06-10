@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../utils/api.js";
+import { useUser } from "../../context/UserContext.jsx";
 
 export default function RegisterPage() {
+  const { login } = useUser();
+
   const navigate = useNavigate();
   const [form, setForm] = useState({
     name: "",
@@ -29,7 +32,7 @@ export default function RegisterPage() {
       }
 
       localStorage.setItem("user", JSON.stringify(data));
-
+      login(data);
       navigate("/dashboard");
     } catch (err) {
       setError("Something went wrong while registering.");

@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../utils/api.js";
+import { useUser } from "../../context/UserContext.jsx";
 
 export default function LoginPage() {
+  const { login } = useUser();
+
   const navigate = useNavigate();
   const [form, setForm] = useState({
     email: "",
@@ -29,7 +32,7 @@ export default function LoginPage() {
 
       // Save token & user
       localStorage.setItem("user", JSON.stringify(data));
-
+      login(data);
       navigate("/dashboard");
     } catch (err) {
       console.error(err);
