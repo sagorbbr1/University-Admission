@@ -23,6 +23,7 @@ import UniversitySelect from "./pages/QuestionBank/UniversitySelect";
 import UnitSelect from "./pages/QuestionBank/UnitSelect";
 import YearSelect from "./pages/QuestionBank/YearSelect";
 import QuestionDisplay from "./pages/QuestionBank/QuestionDisplay";
+import AdminPanel from "./pages/Admin/AdminPanel";
 
 function App() {
   return (
@@ -56,6 +57,7 @@ function App() {
           path="/questionbank/:university/:unit/:year"
           element={<QuestionDisplay />}
         />
+        <Route path="/admin" element={<AdminPanel />} />
       </Routes>
     </Router>
   );

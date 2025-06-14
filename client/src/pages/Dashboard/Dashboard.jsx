@@ -58,14 +58,18 @@ const features = [
 
 const Dashboard = () => {
   const { user } = useUser();
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white py-10 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white pb-10 pt-20 px-4">
+      <MobileNavbar /> {/* Always on top */}
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-3xl font-bold mb-4">🎓 {user && user.name}</h2>
+        <h2 className="text-3xl font-bold mb-4">
+          🎓 {user && user.user?.name}
+        </h2>
         <p className="text-lg text-gray-300 mb-10">
           প্রতিদিনের প্র‍্যাকটিস, প্রস্তুতি ও অগ্রগতির সবকিছু এক জায়গায়।
         </p>
-        <MobileNavbar />
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map(({ title, link, desc }) => (
             <Link
