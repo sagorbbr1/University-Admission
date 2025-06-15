@@ -9,6 +9,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 dotenv = require("dotenv");
 dotenv.config();
 const authRoutes = require("./routes/AuthRoutes.js");
+const questionRoutes = require("./routes/QuestionRoutes.js");
 
 mongoose
   .connect(process.env.MONGO_URI)
@@ -21,6 +22,7 @@ mongoose
   .catch((err) => console.log(err));
 
 app.use("/api/auth", authRoutes);
+app.use("/api/questions", questionRoutes);
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });

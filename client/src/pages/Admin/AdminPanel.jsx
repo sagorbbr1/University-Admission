@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { UploadCloud, PlusCircle } from "lucide-react";
+import api from "./../../utils/api.js";
 
 export default function AdminPanel() {
   const [showManualForm, setShowManualForm] = useState(false);
@@ -21,17 +22,50 @@ export default function AdminPanel() {
     updatedOptions[index] = value;
     setQuestionForm({ ...questionForm, options: updatedOptions });
   };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitting Question:", questionForm);
-    // Here: Add POST request to backend API
+    try {
+      const res = await api.post("/questions/add", questionForm);
+
+      if (res.status === 200) {
+        alert("✅ Question added successfully!");
+        setQuestionForm({
+          university: "",
+          unit: "",
+          sub: "",
+          year: "",
+          question: "",
+          options: ["", "", "", ""],
+          answer: "",
+        });
+      } else {
+        alert(`❌ Failed: ${res.data?.message || "Unknown error"}`);
+      }
+    } catch (err) {
+      console.error("🚨 Error adding question:", err);
+      alert(`❌ ${err.response?.data?.message || "An error occurred."}`);
+    }
   };
 
-  const handleBulkUpload = (e) => {
+  const handleBulkUpload = async (e) => {
     const file = e.target.files[0];
-    console.log("Uploading bulk file:", file.name);
-    // Here: parse CSV & send to backend
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await api.post("/questions/bulk", formData);
+
+      if (res.status === 200) {
+        alert("📂 Bulk upload successful!");
+      } else {
+        alert(`❌ Bulk upload failed: ${res.data?.message || "Unknown error"}`);
+      }
+    } catch (err) {
+      console.error("🚨 Error in bulk upload:", err);
+      alert(`❌ ${err.response?.data?.message || "Bulk upload failed."}`);
+    }
   };
 
   return (
@@ -64,6 +98,13 @@ export default function AdminPanel() {
                   type="text"
                   name="unit"
                   placeholder="Unit"
+                  onChange={handleChange}
+                  className="input"
+                />
+                <input
+                  type="text"
+                  name="sub"
+                  placeholder="Sub"
                   onChange={handleChange}
                   className="input"
                 />
