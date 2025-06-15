@@ -24,6 +24,8 @@ import UnitSelect from "./pages/QuestionBank/UnitSelect";
 import YearSelect from "./pages/QuestionBank/YearSelect";
 import QuestionDisplay from "./pages/QuestionBank/QuestionDisplay";
 import AdminPanel from "./pages/Admin/AdminPanel";
+import AdminRoute from "./routes/AdminRoute";
+import Unauthorized from "./pages/Unauthorized/Unauthorized";
 
 function App() {
   return (
@@ -57,7 +59,15 @@ function App() {
           path="/questionbank/:university/:unit/:year"
           element={<QuestionDisplay />}
         />
-        <Route path="/admin" element={<AdminPanel />} />
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute>
+              <AdminPanel />
+            </AdminRoute>
+          }
+        />
+        <Route path="/unauthorized" element={<Unauthorized />} />
       </Routes>
     </Router>
   );
