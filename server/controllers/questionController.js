@@ -2,10 +2,9 @@ const Question = require("../models/Question");
 const csv = require("csv-parser");
 const fs = require("fs");
 const path = require("path");
+const iconv = require("iconv-lite");
 
-// @desc    Add a single question manually
-// @route   POST /api/questions/add
-// @access  Admin
+// 🧠 Add Single Question
 const addQuestion = async (req, res) => {
   try {
     const { university, unit, sub, year, question, options, answer } = req.body;
@@ -16,20 +15,24 @@ const addQuestion = async (req, res) => {
       !sub ||
       !year ||
       !question ||
-      !options ||
+      !Array.isArray(options) ||
+      options.length !== 4 ||
       !answer
     ) {
-      return res.status(400).json({ message: "All fields are required." });
+      return res.status(400).json({
+        message:
+          "❌ All fields are required and options must be an array of 4 items.",
+      });
     }
 
     const newQuestion = new Question({
-      university,
-      unit,
-      sub,
-      year,
-      question,
-      options,
-      answer,
+      university: university.trim(),
+      unit: unit.trim(),
+      sub: sub.trim(),
+      year: year.trim(),
+      question: question.trim(),
+      options: options.map((opt) => opt.trim()),
+      answer: answer.trim(),
     });
 
     await newQuestion.save();
@@ -39,65 +42,118 @@ const addQuestion = async (req, res) => {
     console.error("❌ Error adding question:", err.message);
     res
       .status(500)
-      .json({ message: "Failed to add question", error: err.message });
+      .json({ message: "❌ Failed to add question", error: err.message });
   }
 };
 
+// 📂 Bulk Upload
 const bulkUpload = async (req, res) => {
   if (!req.file) {
-    return res.status(400).json({ message: "No file uploaded" });
+    return res.status(400).json({ message: "❌ No file uploaded" });
   }
-
-  console.log("Bulk upload file:", req.file);
 
   const filePath = path.join(__dirname, "..", req.file.path);
   const questions = [];
 
   try {
-    fs.createReadStream(filePath)
+    const readStream = fs
+      .createReadStream(filePath)
+      .pipe(iconv.decodeStream("utf-8"));
+
+    readStream
       .pipe(csv())
       .on("data", (row) => {
+        console.log("👉 Parsed Row:", row); // Debugging output
+
+        const {
+          university,
+          unit,
+          sub,
+          year,
+          question,
+          option1,
+          option2,
+          option3,
+          option4,
+          answer,
+        } = row;
+
         if (
-          row.university &&
-          row.unit &&
-          row.sub &&
-          row.year &&
-          row.question &&
-          row.option1 &&
-          row.option2 &&
-          row.option3 &&
-          row.option4 &&
-          row.answer
+          university &&
+          unit &&
+          sub &&
+          year &&
+          question &&
+          option1 &&
+          option2 &&
+          option3 &&
+          option4 &&
+          answer
         ) {
           questions.push({
-            university: row.university,
-            unit: row.unit,
-            sub: row.sub,
-            year: row.year,
-            question: row.question,
-            options: [row.option1, row.option2, row.option3, row.option4],
-            answer: row.answer,
+            university: university.trim(),
+            unit: unit.trim(),
+            sub: sub.trim(),
+            year: year.trim(),
+            question: question.trim(),
+            options: [
+              option1.trim(),
+              option2.trim(),
+              option3.trim(),
+              option4.trim(),
+            ],
+            answer: answer.trim(),
           });
         }
       })
       .on("end", async () => {
         try {
-          await Question.insertMany(questions);
-          fs.unlinkSync(filePath); // Clean up uploaded file
-          res.status(200).json({
-            message: `✅ ${questions.length} questions uploaded successfully.`,
+          fs.unlinkSync(filePath); // Clean up temp CSV file
+
+          if (questions.length === 0) {
+            console.warn("❌ No valid questions found after parsing.");
+            return res
+              .status(400)
+              .json({ message: "❌ No valid questions found in CSV." });
+          }
+
+          // Optional: Deduplicate based on question + year
+          const uniqueQuestions = questions.filter(
+            (q, idx, self) =>
+              idx ===
+              self.findIndex(
+                (t) => t.question === q.question && t.year === q.year
+              )
+          );
+
+          await Question.insertMany(uniqueQuestions);
+
+          return res.status(200).json({
+            message: `✅ ${uniqueQuestions.length} questions uploaded successfully.`,
           });
-        } catch (err) {
-          console.error("❌ Failed to save bulk questions:", err.message);
-          res.status(500).json({
-            message: "Error saving bulk questions",
-            error: err.message,
+        } catch (dbErr) {
+          console.error("❌ Error inserting questions:", dbErr.message);
+          return res.status(500).json({
+            message: "❌ Failed to insert questions",
+            error: dbErr.message,
           });
         }
+      })
+      .on("error", (csvErr) => {
+        console.error("❌ CSV Parse Error:", csvErr.message);
+        fs.unlinkSync(filePath); // Clean file on parse error
+        return res.status(500).json({
+          message: "❌ Error parsing CSV file",
+          error: csvErr.message,
+        });
       });
   } catch (err) {
-    console.error("❌ Bulk upload failed:", err.message);
-    res.status(500).json({ message: "Bulk upload error", error: err.message });
+    console.error("❌ Bulk upload error:", err.message);
+    fs.unlinkSync(filePath); // Clean file on unexpected error
+    return res.status(500).json({
+      message: "❌ Bulk upload failed",
+      error: err.message,
+    });
   }
 };
 

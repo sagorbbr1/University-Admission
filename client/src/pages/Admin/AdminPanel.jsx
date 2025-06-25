@@ -27,7 +27,9 @@ export default function AdminPanel() {
     try {
       const res = await api.post("/questions/add", questionForm);
 
-      if (res.status === 200) {
+      console.log("🚀 Response from adding question:", res);
+
+      if (res.status === 201) {
         alert("✅ Question added successfully!");
         setQuestionForm({
           university: "",
@@ -55,10 +57,12 @@ export default function AdminPanel() {
     formData.append("file", file);
 
     try {
-      const res = await api.post("/questions/bulk", formData);
+      const res = await api.post("/questions/bulk", formData, true);
 
       if (res.status === 200) {
         alert("📂 Bulk upload successful!");
+
+        console.log(res);
       } else {
         alert(`❌ Bulk upload failed: ${res.data?.message || "Unknown error"}`);
       }
