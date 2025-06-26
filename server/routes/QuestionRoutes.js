@@ -6,6 +6,10 @@ const upload = require("../middleware/upload");
 const {
   addQuestion,
   bulkUpload,
+  getAllUniversities,
+  getUnitsByUniversity,
+  getYearsByUniversityAndUnit,
+  getQuestionsByUniversityUnitYear,
 } = require("../controllers/questionController");
 
 // Manual add
@@ -13,5 +17,19 @@ router.post("/add", addQuestion);
 
 // Bulk upload
 router.post("/bulk", upload.single("file"), bulkUpload);
+
+// Get all universities
+router.get("/universities", getAllUniversities);
+
+// Get units by university
+
+router.get("/units/:university", getUnitsByUniversity);
+
+// Get years by university and unit
+
+router.get("/years/:university/:unit", getYearsByUniversityAndUnit);
+
+//Get questions by university, unit, and year
+router.get("/:university/:unit/:year", getQuestionsByUniversityUnitYear);
 
 module.exports = router;

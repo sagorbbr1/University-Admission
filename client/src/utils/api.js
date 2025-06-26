@@ -13,6 +13,7 @@ const handleResponse = async (res) => {
 
 const api = {
   get: async (endpoint) => {
+    console.log("🔍 Fetching:", `${BASE_URL}${endpoint}`);
     const res = await fetch(`${BASE_URL}${endpoint}`, {
       method: "GET",
       headers: {

@@ -63,7 +63,7 @@ const bulkUpload = async (req, res) => {
     readStream
       .pipe(csv())
       .on("data", (row) => {
-        console.log("👉 Parsed Row:", row); // Debugging output
+        console.log("👉 Parsed Row:", row);
 
         const {
           university,
@@ -157,7 +157,86 @@ const bulkUpload = async (req, res) => {
   }
 };
 
+const getAllUniversities = async (req, res) => {
+  try {
+    const universities = await Question.distinct("university");
+    res.status(200).json(universities);
+  } catch (err) {
+    console.error("❌ Error fetching universities:", err.message);
+    res.status(500).json({ message: "Failed to fetch universities" });
+  }
+};
+
+const getUnitsByUniversity = async (req, res) => {
+  const { university } = req.params;
+
+  try {
+    const units = await Question.distinct("unit", { university });
+    res.status(200).json(units);
+  } catch (err) {
+    console.error("❌ Error fetching units:", err.message);
+    res.status(500).json({ message: "Failed to fetch units" });
+  }
+};
+
+const getYearsByUniversityAndUnit = async (req, res) => {
+  console.log("hitttttt");
+  try {
+    const { university, unit } = req.params;
+
+    if (!university || !unit) {
+      return res.status(400).json({ message: "University and Unit required" });
+    }
+
+    // Normalize inputs (case-insensitive and trimmed)
+    const formattedUniversity = decodeURIComponent(university).trim();
+    const formattedUnit = decodeURIComponent(unit).trim();
+
+    // Fetch distinct years
+    const years = await Question.distinct("year", {
+      university: { $regex: `^${formattedUniversity}$`, $options: "i" },
+      unit: { $regex: `^${formattedUnit}$`, $options: "i" },
+    });
+
+    if (!years.length) {
+      return res.status(404).json({ message: "No years found for this unit." });
+    }
+
+    const sorted = years.sort((a, b) => b - a); // descending
+    return res.status(200).json(sorted);
+  } catch (err) {
+    console.error("❌ Error fetching years:", err);
+    return res
+      .status(500)
+      .json({ message: "Server error", error: err.message });
+  }
+};
+
+const getQuestionsByUniversityUnitYear = async (req, res) => {
+  const { university, unit, year } = req.params;
+
+  try {
+    const questions = await Question.find({
+      university,
+      unit,
+      year,
+    }).select("-__v");
+
+    res.status(200).json(questions);
+  } catch (err) {
+    console.error("❌ Error fetching questions:", err.message);
+    res.status(500).json({
+      message: "❌ Failed to fetch questions",
+      error: err.message,
+    });
+  }
+};
+
 module.exports = {
   addQuestion,
   bulkUpload,
+  getAllUniversities,
+  getUnitsByUniversity,
+  getYearsByUniversityAndUnit,
+  getQuestionsByUniversityUnitYear,
 };

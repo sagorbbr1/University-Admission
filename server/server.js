@@ -23,6 +23,7 @@ mongoose
 
 app.use("/api/auth", authRoutes);
 app.use("/api/questions", questionRoutes);
+
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
