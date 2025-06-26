@@ -10,6 +10,7 @@ const {
   getUnitsByUniversity,
   getYearsByUniversityAndUnit,
   getQuestionsByUniversityUnitYear,
+  getQuestionsByUniversityUnit,
 } = require("../controllers/questionController");
 
 // Manual add
@@ -28,6 +29,9 @@ router.get("/units/:university", getUnitsByUniversity);
 // Get years by university and unit
 
 router.get("/years/:university/:unit", getYearsByUniversityAndUnit);
+
+// Get questions by university and unit (no year filter)
+router.get("/mock/:university/:unit", getQuestionsByUniversityUnit);
 
 //Get questions by university, unit, and year
 router.get("/:university/:unit/:year", getQuestionsByUniversityUnitYear);

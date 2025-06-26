@@ -8,10 +8,6 @@ import RegisterPage from "./pages/RegisterPage/Register";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Routine from "./pages/Routine/Routine";
 import RoutineDnD from "./pages/Routine/RoutineDnD";
-import MockTestSelect from "./pages/MockTest/MockTestSelect";
-import MockSetup from "./pages/MockTest/MockSetup";
-import MockExam from "./pages/MockTest/MockExam";
-import MockResult from "./pages/MockTest/MockResult";
 import Leaderboard from "./pages/Leaderboard/Leaderboard";
 import Notice from "./pages/Notice/Notice";
 import DailyChallenge from "./pages/DailyChallenge/DailyChallenge";
@@ -26,6 +22,11 @@ import QuestionDisplay from "./pages/QuestionBank/QuestionDisplay";
 import AdminPanel from "./pages/Admin/AdminPanel";
 import AdminRoute from "./routes/AdminRoute";
 import Unauthorized from "./pages/Unauthorized/Unauthorized";
+import MockUniversitySelect from "./pages/MockTest/UniversitySelect";
+import MockUnitSelect from "./pages/MockTest/UnitSelect";
+import MockConfig from "./pages/MockTest/MockConfig";
+import MockTest from "./pages/MockTest/MockTest";
+import MockResult from "./pages/MockTest/MockResult";
 
 function App() {
   return (
@@ -38,10 +39,16 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/routine" element={<Routine />} />
         <Route path="/routine-dnd" element={<RoutineDnD />} />
-        <Route path="/mock-tests" element={<MockTestSelect />} />
-        <Route path="/mock-setup/:university" element={<MockSetup />} />
-        <Route path="/mock-exam/:id" element={<MockExam />} />
-        <Route path="/mock-result/:id" element={<MockResult />} />
+        //MockExam
+        <Route path="/mock" element={<MockUniversitySelect />} />
+        <Route path="/mock/unit/:university" element={<MockUnitSelect />} />
+        <Route
+          path="/mock/configure/:university/:unit"
+          element={<MockConfig />}
+        />
+        <Route path="/mock/start/:university/:unit" element={<MockTest />} />
+        <Route path="/mock/result/:attemptId" element={<MockResult />} />
+        //Others
         <Route path="/leaderboard" element={<Leaderboard />} />
         <Route path="/notices" element={<Notice />} />
         <Route path="/daily-challenge" element={<DailyChallenge />} />

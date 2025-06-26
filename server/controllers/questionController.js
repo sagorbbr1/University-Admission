@@ -180,7 +180,6 @@ const getUnitsByUniversity = async (req, res) => {
 };
 
 const getYearsByUniversityAndUnit = async (req, res) => {
-  console.log("hitttttt");
   try {
     const { university, unit } = req.params;
 
@@ -232,6 +231,47 @@ const getQuestionsByUniversityUnitYear = async (req, res) => {
   }
 };
 
+//Mock Test - Get Random Questions by University and Unit
+const getQuestionsByUniversityUnit = async (req, res) => {
+  try {
+    let { university, unit } = req.params;
+
+    if (!university || !unit) {
+      return res
+        .status(400)
+        .json({ error: "University and unit are required" });
+    }
+
+    university = university.trim();
+    unit = unit.trim();
+
+    console.log("Querying questions with:", { university, unit });
+
+    const limit = parseInt(req.query.limit) || 25;
+
+    // Case-insensitive regex match
+    const questions = await Question.find({
+      university: new RegExp(`^${university}$`, "i"),
+      unit: new RegExp(`^${unit}$`, "i"),
+    }).limit(limit);
+
+    console.log(
+      `Found ${questions.length} questions for ${university} - ${unit}`
+    );
+
+    if (!questions.length) {
+      return res
+        .status(404)
+        .json({ error: "No questions found for this university and unit" });
+    }
+
+    return res.status(200).json(questions);
+  } catch (error) {
+    console.error("❌ Failed to fetch questions:", error.message);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 module.exports = {
   addQuestion,
   bulkUpload,
@@ -239,4 +279,5 @@ module.exports = {
   getUnitsByUniversity,
   getYearsByUniversityAndUnit,
   getQuestionsByUniversityUnitYear,
+  getQuestionsByUniversityUnit,
 };

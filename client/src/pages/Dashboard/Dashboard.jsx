@@ -6,7 +6,7 @@ import MobileNavbar from "../../components/MobileNavbar/MobileNavbar.jsx";
 const features = [
   {
     title: "⏱️ মক টেস্ট",
-    link: "/mock-tests",
+    link: "/mock",
     desc: "নির্ধারিত সময়ের মধ্যে পরীক্ষার অনুশীলন করো",
   },
   {
