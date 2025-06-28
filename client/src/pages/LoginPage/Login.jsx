@@ -23,33 +23,35 @@ export default function LoginPage() {
     setError("");
 
     try {
-      const data = await api.post("/auth/login", form);
+      const response = await api.post("/auth/login", form);
+      const { status, data } = response;
 
-      if (data?.error || !data?.token) {
-        setError(data.message || "Login failed.");
+      console.log("🌐 Login Response:", response);
+
+      if (status !== 200 || !data?.token) {
+        setError(data?.message || "Login failed.");
         return;
       }
 
-      // Save token & user
-      localStorage.setItem("user", JSON.stringify(data));
       login(data);
       navigate("/dashboard");
     } catch (err) {
-      console.error(err);
+      console.error("❌ Login error:", err);
       setError("Something went wrong during login.");
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-100 via-blue-200 to-purple-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-all duration-500">
-      <div className="bg-white/30 dark:bg-white/10 backdrop-blur-md p-8 rounded-2xl shadow-2xl max-w-sm w-full">
-        <h2 className="text-3xl font-bold text-center text-gray-800 dark:text-white mb-6">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#e0f7fa] via-[#e1bee7] to-[#f3e5f5] dark:from-[#0f0f0f] dark:via-[#1f1f1f] dark:to-[#121212] transition-all duration-700">
+      <div className="bg-white/20 dark:bg-white/10 backdrop-blur-lg border border-white/30 dark:border-white/10 rounded-3xl shadow-[0_8px_32px_0_rgba(31,38,135,0.37)] p-10 max-w-md w-full">
+        <h2 className="text-4xl font-bold text-center text-gray-800 dark:text-white mb-8 drop-shadow-md">
           Welcome Back 🚀
         </h2>
 
-        <form className="space-y-4" onSubmit={handleSubmit}>
+        <form className="space-y-6" onSubmit={handleSubmit}>
+          {/* Email */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Email
             </label>
             <input
@@ -57,14 +59,15 @@ export default function LoginPage() {
               name="email"
               value={form.email}
               onChange={handleChange}
-              className="mt-1 block w-full px-4 py-2 bg-white/60 dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-4 py-2 bg-white/50 dark:bg-gray-900/40 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-green-500 shadow-inner"
               placeholder="you@example.com"
               required
             />
           </div>
 
+          {/* Password */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Password
             </label>
             <input
@@ -72,25 +75,27 @@ export default function LoginPage() {
               name="password"
               value={form.password}
               onChange={handleChange}
-              className="mt-1 block w-full px-4 py-2 bg-white/60 dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-4 py-2 bg-white/50 dark:bg-gray-900/40 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-green-500 shadow-inner"
               placeholder="••••••••"
               required
             />
           </div>
 
           {error && (
-            <div className="text-red-500 text-sm font-medium">{error}</div>
+            <div className="text-red-500 text-sm font-medium text-center">
+              {error}
+            </div>
           )}
 
           <button
             type="submit"
-            className="w-full py-2 px-4 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition duration-300"
+            className="w-full py-3 px-6 bg-gradient-to-r from-green-500 to-green-700 hover:from-green-600 hover:to-green-800 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out"
           >
             Sign In
           </button>
         </form>
 
-        <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-4">
+        <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-6">
           Don’t have an account?{" "}
           <span
             onClick={() => navigate("/register")}

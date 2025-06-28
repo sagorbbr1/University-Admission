@@ -27,6 +27,7 @@ import MockUnitSelect from "./pages/MockTest/UnitSelect";
 import MockConfig from "./pages/MockTest/MockConfig";
 import MockTest from "./pages/MockTest/MockTest";
 import MockResult from "./pages/MockTest/MockResult";
+import Profile from "./pages/Profile/Profile";
 
 function App() {
   return (
@@ -75,6 +76,7 @@ function App() {
           }
         />
         <Route path="/unauthorized" element={<Unauthorized />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </Router>
   );

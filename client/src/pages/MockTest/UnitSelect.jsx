@@ -29,24 +29,37 @@ const UnitSelect = () => {
   }, [university]);
 
   const handleSelect = (unit) => {
-    navigate(`/mock/configure/${university}/${unit}`);
+    navigate(
+      `/mock/configure/${encodeURIComponent(university)}/${encodeURIComponent(
+        unit
+      )}`
+    );
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-6">
-      <h1 className="text-3xl font-bold text-center mb-8">
-        🧩 ইউনিট নির্বাচন করুন
-      </h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-        {units.map((unit) => (
-          <div
-            key={unit}
-            onClick={() => handleSelect(unit)}
-            className="p-10 rounded-xl cursor-pointer text-center shadow-xl bg-indigo-700 hover:scale-105 duration-300 text-lg font-semibold"
-          >
-            {unit}
+    <div className="min-h-screen bg-gradient-to-br from-green-200 via-blue-300 to-purple-400 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center p-6">
+      <div className="max-w-5xl w-full text-center">
+        <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white mb-10 drop-shadow-lg">
+          🧩 ইউনিট নির্বাচন করুন
+        </h1>
+
+        {loading ? (
+          <p className="text-gray-700 dark:text-gray-300">⏳ লোড হচ্ছে...</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+            {units.map((unit) => (
+              <div
+                key={unit}
+                onClick={() => handleSelect(unit)}
+                className="cursor-pointer bg-white/20 dark:bg-white/10 backdrop-blur-lg border border-white/30 dark:border-white/20 rounded-3xl p-10 shadow-lg hover:shadow-2xl transition transform hover:scale-105 select-none text-gray-900 dark:text-gray-100 font-semibold text-2xl flex flex-col items-center justify-center"
+                title={unit}
+              >
+                <div className="text-6xl mb-4 select-none">🧩</div>
+                <div>{unit}</div>
+              </div>
+            ))}
           </div>
-        ))}
+        )}
       </div>
     </div>
   );

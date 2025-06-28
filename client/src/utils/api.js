@@ -2,6 +2,29 @@ const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 console.log("🌐 API Base URL:", BASE_URL);
 
+// ✅ Safely get token from localStorage.user.token
+const getToken = () => {
+  try {
+    const user = JSON.parse(localStorage.getItem("user"));
+    return user?.token;
+  } catch (err) {
+    console.error("❌ Failed to parse user token from localStorage", err);
+    return null;
+  }
+};
+
+const getAuthHeaders = () => {
+  const token = getToken();
+  return token
+    ? {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      }
+    : {
+        "Content-Type": "application/json",
+      };
+};
+
 const handleResponse = async (res) => {
   const data = await res.json().catch(() => null);
   return {
@@ -16,29 +39,27 @@ const api = {
     console.log("🔍 Fetching:", `${BASE_URL}${endpoint}`);
     const res = await fetch(`${BASE_URL}${endpoint}`, {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: getAuthHeaders(),
     });
     return handleResponse(res);
   },
 
   post: async (endpoint, data, isFormData = false) => {
+    const headers = isFormData ? {} : getAuthHeaders();
     const res = await fetch(`${BASE_URL}${endpoint}`, {
       method: "POST",
-      headers: isFormData ? undefined : { "Content-Type": "application/json" },
+      headers,
       body: isFormData ? data : JSON.stringify(data),
     });
 
-    const resData = await res.json();
+    const resData = await res.json().catch(() => null);
     return { status: res.status, data: resData };
   },
+
   put: async (endpoint, body) => {
     const res = await fetch(`${BASE_URL}${endpoint}`, {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: getAuthHeaders(),
       body: JSON.stringify(body),
     });
     return handleResponse(res);
@@ -47,9 +68,7 @@ const api = {
   delete: async (endpoint) => {
     const res = await fetch(`${BASE_URL}${endpoint}`, {
       method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: getAuthHeaders(),
     });
     return handleResponse(res);
   },

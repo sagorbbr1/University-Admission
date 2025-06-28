@@ -24,19 +24,23 @@ export default function RegisterPage() {
     setError("");
 
     try {
-      const data = await api.post("/auth/register", form);
+      const response = await api.post("/auth/register", form);
+      const { status, data } = response;
 
-      if (data?.error || data?.message === "User already exists") {
-        setError(data.message || "Registration failed.");
+      // Accept 200 or 201 as success statuses
+      if (
+        ![200, 201].includes(status) ||
+        data?.message === "User already exists"
+      ) {
+        setError(data?.message || "Registration failed.");
         return;
       }
 
-      localStorage.setItem("user", JSON.stringify(data));
       login(data);
       navigate("/dashboard");
     } catch (err) {
       setError("Something went wrong while registering.");
-      console.error(err);
+      console.error("❌ Registration error:", err);
     }
   };
 
@@ -48,6 +52,7 @@ export default function RegisterPage() {
         </h2>
 
         <form className="space-y-4" onSubmit={handleSubmit}>
+          {/* Name */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
               Full Name
@@ -57,12 +62,13 @@ export default function RegisterPage() {
               name="name"
               value={form.name}
               onChange={handleChange}
-              className="mt-1 block w-full px-4 py-2 bg-white/60 dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500"
               placeholder="John Doe"
               required
+              className="mt-1 block w-full px-4 py-2 bg-white/60 dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 transition"
             />
           </div>
 
+          {/* Email */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
               Email
@@ -72,12 +78,13 @@ export default function RegisterPage() {
               name="email"
               value={form.email}
               onChange={handleChange}
-              className="mt-1 block w-full px-4 py-2 bg-white/60 dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500"
               placeholder="you@example.com"
               required
+              className="mt-1 block w-full px-4 py-2 bg-white/60 dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 transition"
             />
           </div>
 
+          {/* Password */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
               Password
@@ -87,16 +94,18 @@ export default function RegisterPage() {
               name="password"
               value={form.password}
               onChange={handleChange}
-              className="mt-1 block w-full px-4 py-2 bg-white/60 dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500"
               placeholder="••••••••"
               required
+              className="mt-1 block w-full px-4 py-2 bg-white/60 dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 transition"
             />
           </div>
 
+          {/* Error */}
           {error && (
             <div className="text-red-500 text-sm font-medium">{error}</div>
           )}
 
+          {/* Submit */}
           <button
             type="submit"
             className="w-full py-2 px-4 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition duration-300"
@@ -105,6 +114,7 @@ export default function RegisterPage() {
           </button>
         </form>
 
+        {/* Redirect */}
         <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-4">
           Already have an account?{" "}
           <span

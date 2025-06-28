@@ -39,8 +39,8 @@ export const UserProvider = ({ children }) => {
 
   const login = (userData) => {
     localStorage.setItem("user", JSON.stringify(userData));
-    if (userData.user && userData.token) {
-      setUser(userData.user);
+    if (userData && userData.token) {
+      setUser(userData);
       setToken(userData.token);
     } else if (userData.name && userData.email && userData.token) {
       const { token, ...userWithoutToken } = userData;

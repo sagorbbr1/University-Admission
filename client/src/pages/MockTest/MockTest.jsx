@@ -29,6 +29,7 @@ const MockTest = () => {
       try {
         if (!university || !unit) {
           setError("⚠️ বিশ্ববিদ্যালয় বা ইউনিট সিলেক্ট করা হয়নি।");
+          setLoading(false);
           return;
         }
 
@@ -55,7 +56,7 @@ const MockTest = () => {
   }, [university, unit, questionCount]);
 
   useEffect(() => {
-    if (error) return; // don't start timer if error
+    if (error) return;
 
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
@@ -97,59 +98,71 @@ const MockTest = () => {
 
   if (loading)
     return (
-      <div className="text-white text-center p-10 text-xl">
-        ⏳ প্রশ্ন লোড হচ্ছে...
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-100 via-blue-200 to-purple-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-all duration-500 px-6">
+        <p className="text-gray-900 dark:text-white text-xl font-semibold">
+          ⏳ প্রশ্ন লোড হচ্ছে...
+        </p>
       </div>
     );
 
   if (error)
     return (
-      <div className="text-red-500 text-center p-10 text-xl font-semibold">
-        {error}
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-100 via-blue-200 to-purple-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-all duration-500 px-6">
+        <p className="text-red-600 dark:text-red-400 text-xl font-semibold text-center max-w-lg">
+          {error}
+        </p>
       </div>
     );
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold">📝 মক টেস্ট</h2>
-        <div className="text-lg font-mono bg-red-600 px-4 py-2 rounded">
-          ⏱️ {formatTime(timeLeft)}
-        </div>
-      </div>
-
-      <div className="space-y-8">
-        {questions.map((q, index) => (
-          <div key={q._id} className="bg-gray-800 p-6 rounded-lg shadow">
-            <p className="mb-4 font-semibold">
-              {index + 1}. {q.question}
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {q.options.map((opt, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => handleOptionSelect(q._id, opt)}
-                  className={`py-2 px-4 rounded border transition-all ${
-                    answers[q._id] === opt
-                      ? "bg-green-600 border-green-500"
-                      : "bg-gray-700 border-gray-600"
-                  }`}
-                >
-                  {opt}
-                </button>
-              ))}
-            </div>
+    <div className="min-h-screen flex items-start justify-center bg-gradient-to-br from-green-100 via-blue-200 to-purple-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-all duration-500 pt-20 px-4">
+      <div className="bg-white/30 dark:bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl max-w-4xl w-full p-8">
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white drop-shadow-sm">
+            📝 মক টেস্ট
+          </h2>
+          <div className="text-lg font-mono bg-green-600 dark:bg-green-700 px-4 py-2 rounded-xl shadow-md text-white select-none">
+            ⏱️ {formatTime(timeLeft)}
           </div>
-        ))}
-      </div>
+        </div>
 
-      <div className="mt-10 text-center">
-        <button
-          onClick={handleSubmit}
-          className="bg-blue-600 hover:bg-blue-700 py-3 px-6 rounded text-lg font-semibold"
-        >
-          ✅ সাবমিট করুন
-        </button>
+        <div className="space-y-6 max-h-[70vh] overflow-y-auto pr-2">
+          {questions.map((q, index) => (
+            <div
+              key={q._id}
+              className="bg-white/40 dark:bg-white/20 backdrop-blur-sm border border-white/30 rounded-xl p-5 shadow-md"
+            >
+              <p className="mb-4 font-semibold text-gray-900 dark:text-white">
+                {index + 1}. {q.question}
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {q.options.map((opt, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => handleOptionSelect(q._id, opt)}
+                    className={`py-2 px-4 rounded-lg border transition-colors font-medium text-gray-900 dark:text-white
+                      ${
+                        answers[q._id] === opt
+                          ? "bg-green-600 border-green-600 text-white shadow-lg shadow-green-500/70"
+                          : "bg-white/60 border-white/50 hover:bg-white/80 dark:hover:bg-white/30 hover:shadow-md hover:shadow-white/40"
+                      }`}
+                  >
+                    {opt}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-8 text-center">
+          <button
+            onClick={handleSubmit}
+            className="w-full py-3 bg-green-600 hover:bg-green-700 transition rounded-xl font-semibold text-white shadow-lg"
+          >
+            ✅ সাবমিট করুন
+          </button>
+        </div>
       </div>
     </div>
   );

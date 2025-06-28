@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import api from "../../utils/api"; // Adjust the import path as necessary
+import api from "../../utils/api"; // Adjust import if needed
+import Spinner from "../../components/Spninner/Spinner";
 
 const UnitSelect = () => {
   const { university } = useParams();
@@ -29,17 +30,19 @@ const UnitSelect = () => {
   }, [university]);
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-6">
-      <h2 className="text-2xl font-bold mb-6 text-center">
+    <div className="min-h-screen bg-gradient-to-br from-green-100 via-blue-200 to-purple-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 px-6 py-10 transition-colors duration-500">
+      <h2 className="text-3xl font-bold mb-8 text-center text-gray-800 dark:text-white drop-shadow">
         🧪 {university} ইউনিট নির্বাচন করুন
       </h2>
 
       {loading ? (
-        <p className="text-center text-gray-400">Loading units...</p>
+        <Spinner />
       ) : units.length === 0 ? (
-        <p className="text-center text-red-400">❌ কোনো ইউনিট পাওয়া যায়নি</p>
+        <p className="text-center text-red-500 font-semibold">
+          ❌ কোনো ইউনিট পাওয়া যায়নি
+        </p>
       ) : (
-        <div className="grid grid-cols-2 gap-4 max-w-xl mx-auto">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 max-w-xl mx-auto">
           {units.map((unit, idx) => (
             <button
               key={idx}
@@ -50,7 +53,7 @@ const UnitSelect = () => {
                   )}/${encodeURIComponent(unit)}`
                 )
               }
-              className="p-4 bg-gray-800 hover:bg-blue-600 rounded-lg shadow text-lg"
+              className="p-5 bg-white/30 dark:bg-white/10 backdrop-blur-md border border-white/20 dark:border-white/10 rounded-2xl shadow-lg text-lg font-semibold text-gray-900 dark:text-white hover:bg-white/40 hover:dark:bg-white/20 hover:scale-105 transition-transform duration-300"
             >
               {unit}
             </button>

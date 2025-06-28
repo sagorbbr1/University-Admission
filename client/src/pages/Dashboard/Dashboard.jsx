@@ -61,49 +61,62 @@ const Dashboard = () => {
 
   return (
     <>
-      {user && (
-        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white pb-10 pt-20 px-4">
-          {user && user.role === "admin" && (
-            <Link to="/admin" className="text-green-400 hover:underline">
-              Admin Panel
-            </Link>
-          )}
+      {user ? (
+        <div className="min-h-screen bg-gradient-to-br from-green-100 via-blue-200 to-purple-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 text-white px-4 pt-20 pb-10 transition-all duration-500">
           <div className="max-w-7xl mx-auto">
-            <h2 className="text-3xl font-bold mb-4">🎓 {user && user?.name}</h2>
-            <p className="text-lg text-gray-300 mb-10">
+            {/* Admin Link */}
+            {user.role === "admin" && (
+              <Link
+                to="/admin"
+                className="inline-block mb-4 text-green-600 dark:text-green-300 hover:underline transition"
+              >
+                🔧 Admin Panel
+              </Link>
+            )}
+
+            {/* Welcome */}
+            <h2 className="text-4xl font-bold mb-2 text-gray-800 dark:text-white drop-shadow">
+              🎓 {user?.name}
+            </h2>
+            <p className="text-lg text-gray-700 dark:text-gray-300 mb-10">
               প্রতিদিনের প্র‍্যাকটিস, প্রস্তুতি ও অগ্রগতির সবকিছু এক জায়গায়।
             </p>
 
+            {/* Features */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {features.map(({ title, link, desc }) => (
                 <Link
-                  key={title}
                   to={link}
-                  className="bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded-xl p-6 shadow-md hover:shadow-xl transition-all"
+                  key={title}
+                  className="bg-white/30 dark:bg-white/10 backdrop-blur-md p-6 rounded-2xl shadow-2xl border border-white/20 dark:border-white/10 transition-all hover:scale-[1.03] hover:shadow-2xl"
                 >
-                  <h2 className="text-xl font-semibold text-white">{title}</h2>
-                  <p className="mt-2 text-sm text-gray-400">{desc}</p>
+                  <h3 className="text-xl font-semibold text-gray-800 dark:text-white">
+                    {title}
+                  </h3>
+                  <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                    {desc}
+                  </p>
                 </Link>
               ))}
             </div>
           </div>
         </div>
-      )}
-
-      {!user && (
-        <div className="min-h-[60vh] flex items-center justify-center text-center">
-          <div className="bg-white dark:bg-gray-800 shadow-xl border border-gray-200 dark:border-gray-700 rounded-2xl p-8 max-w-md w-full">
-            <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">
+      ) : (
+        <div className="min-h-[60vh] flex items-center justify-center text-center px-4">
+          <div className="bg-white/30 dark:bg-white/10 backdrop-blur-lg border border-white/20 dark:border-gray-700 rounded-3xl p-10 shadow-2xl max-w-md w-full">
+            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-4">
               🔐 Access Denied
             </h2>
-            <p className="text-gray-600 dark:text-gray-300 mb-6">
+            <p className="text-gray-700 dark:text-gray-200 mb-6 leading-relaxed">
               Please{" "}
-              <span className="font-semibold text-green-600">log in</span> to
-              access your dashboard and personalized features.
+              <span className="font-semibold text-green-600 dark:text-green-400 underline underline-offset-2">
+                log in
+              </span>{" "}
+              to access your dashboard and personalized features.
             </p>
             <a
               href="/login"
-              className="inline-block bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-300"
+              className="inline-block bg-gradient-to-r from-green-500 to-green-700 hover:from-green-600 hover:to-green-800 text-white font-semibold py-2 px-6 rounded-xl shadow-lg transition-all duration-300 hover:scale-[1.05]"
             >
               Go to Login
             </a>

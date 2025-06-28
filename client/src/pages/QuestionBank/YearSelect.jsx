@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import api from "../../utils/api"; // Your axios config (axios.create based)
+import api from "../../utils/api";
+import Spinner from "../../components/Spninner/Spinner";
 
 const YearSelect = () => {
   const { university, unit } = useParams();
@@ -39,21 +40,25 @@ const YearSelect = () => {
   }, [university, unit]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white px-4 py-10">
+    <div className="min-h-screen bg-gradient-to-br from-green-100 via-blue-200 to-purple-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 px-6 py-10 transition-colors duration-500">
       <div className="max-w-4xl mx-auto text-center">
-        <h1 className="text-3xl font-bold mb-8">
+        <h1 className="text-3xl font-bold mb-8 text-gray-800 dark:text-white drop-shadow">
           📘 {unit} - {university}
         </h1>
-        <p className="text-gray-400 mb-6">
+        <p className="text-gray-600 dark:text-gray-300 mb-6">
           একটা বছর বেছে নিন প্রশ্ন দেখার জন্য
         </p>
 
         {loading ? (
-          <p className="text-blue-400">⏳ লোড হচ্ছে...</p>
+          <Spinner />
         ) : error ? (
-          <p className="text-red-500">{error}</p>
+          <p className="text-red-600 dark:text-red-400 font-semibold">
+            {error}
+          </p>
         ) : years.length === 0 ? (
-          <p className="text-yellow-400">⚠️ কোনো প্রশ্ন খুঁজে পাওয়া যায়নি।</p>
+          <p className="text-yellow-600 dark:text-yellow-400 font-semibold">
+            ⚠️ কোনো প্রশ্ন খুঁজে পাওয়া যায়নি।
+          </p>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
             {years.map((year, idx) => (
@@ -66,10 +71,10 @@ const YearSelect = () => {
                     )}/${encodeURIComponent(unit)}/${year}`
                   )
                 }
-                className="cursor-pointer bg-gray-800 hover:bg-blue-700 p-6 rounded-xl shadow-md flex flex-col items-center justify-center transition-all"
+                className="cursor-pointer bg-white/30 dark:bg-white/10 backdrop-blur-md border border-white/20 dark:border-white/10 rounded-2xl p-6 shadow-lg flex flex-col items-center justify-center text-gray-900 dark:text-white font-semibold text-xl hover:bg-white/40 hover:dark:bg-white/20 hover:scale-105 transition-transform duration-300"
               >
-                <div className="text-4xl mb-2">📅</div>
-                <div className="text-xl font-semibold">{year}</div>
+                <div className="text-5xl mb-2">📅</div>
+                <div>{year}</div>
               </div>
             ))}
           </div>
