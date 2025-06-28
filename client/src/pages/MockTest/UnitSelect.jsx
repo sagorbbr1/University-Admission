@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../../utils/api";
+import Spinner from "../../components/Spninner/Spinner";
 
 const UnitSelect = () => {
   const navigate = useNavigate();
@@ -44,7 +45,7 @@ const UnitSelect = () => {
         </h1>
 
         {loading ? (
-          <p className="text-gray-700 dark:text-gray-300">⏳ লোড হচ্ছে...</p>
+          <Spinner />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
             {units.map((unit) => (

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import api from "../../utils/api";
+import Spinner from "../../components/Spninner/Spinner";
 
 const MockTest = () => {
   const { university: paramUniversity, unit: paramUnit } = useParams();
@@ -96,14 +97,7 @@ const MockTest = () => {
     return `${m}:${s}`;
   };
 
-  if (loading)
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-100 via-blue-200 to-purple-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-all duration-500 px-6">
-        <p className="text-gray-900 dark:text-white text-xl font-semibold">
-          ⏳ প্রশ্ন লোড হচ্ছে...
-        </p>
-      </div>
-    );
+  if (loading) return <Spinner />;
 
   if (error)
     return (
