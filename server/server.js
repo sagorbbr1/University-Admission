@@ -11,6 +11,7 @@ dotenv.config();
 const authRoutes = require("./routes/AuthRoutes.js");
 const questionRoutes = require("./routes/QuestionRoutes.js");
 const mockTestRoutes = require("./routes/mockTestRoutes.js");
+const adminRoutes = require("./routes/AdminRoutes.js");
 
 mongoose
   .connect(process.env.MONGO_URI)
@@ -25,6 +26,7 @@ mongoose
 app.use("/api/auth", authRoutes);
 app.use("/api/questions", questionRoutes);
 app.use("/api/mock-test", mockTestRoutes);
+app.use("/api/admin", adminRoutes);
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
