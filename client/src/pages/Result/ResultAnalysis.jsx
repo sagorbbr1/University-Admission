@@ -1,93 +1,91 @@
-import React from "react";
-import { Bar, Pie } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  ArcElement,
-  BarElement,
-  Tooltip,
-  Legend,
-} from "chart.js";
+import React, { useEffect, useState } from "react";
+import { Pie } from "react-chartjs-2";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import api from "../../utils/api";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  ArcElement,
-  Tooltip,
-  Legend
-);
-
-const subjectData = {
-  labels: ["Physics", "Chemistry", "Biology", "Math"],
-  datasets: [
-    {
-      label: "Accuracy (%)",
-      data: [78, 60, 90, 55],
-      backgroundColor: ["#6366f1", "#10b981", "#f59e0b", "#ef4444"],
-      borderRadius: 6,
-      borderSkipped: false,
-    },
-  ],
-};
-
-const pieData = {
-  labels: ["Correct", "Wrong", "Skipped"],
-  datasets: [
-    {
-      data: [50, 20, 10],
-      backgroundColor: ["#10b981", "#ef4444", "#6b7280"],
-      hoverOffset: 8,
-    },
-  ],
-};
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 const ResultAnalysis = () => {
+  const [pieData, setPieData] = useState(null);
+  const [correct, setCorrect] = useState(0);
+  const [wrong, setWrong] = useState(0);
+  const [accuracy, setAccuracy] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBasicStats = async () => {
+      try {
+        const user = JSON.parse(localStorage.getItem("user"));
+        const res = await api.get(`/mock-test/analysis/${user?._id}`);
+
+        const { correct, wrong } = res.data;
+        const total = correct + wrong;
+        const acc = total > 0 ? Math.round((correct / total) * 100) : 0;
+
+        setCorrect(correct);
+        setWrong(wrong);
+        setAccuracy(acc);
+
+        setPieData({
+          labels: ["Correct", "Wrong"],
+          datasets: [
+            {
+              data: [correct, wrong],
+              backgroundColor: ["#10b981", "#ef4444"],
+              hoverOffset: 8,
+            },
+          ],
+        });
+      } catch (err) {
+        console.error("❌ Failed to load analysis:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBasicStats();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="text-center mt-10 text-white">
+        📊 Loading result analysis...
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0f172a] via-[#1f2937] to-[#0f172a] text-white px-4 py-10">
-      <h1 className="text-4xl md:text-5xl font-extrabold text-center bg-gradient-to-r from-cyan-400 via-indigo-400 to-purple-500 bg-clip-text text-transparent drop-shadow-lg animate-pulse mb-14">
-        📊 Result Analysis
+      <h1 className="text-4xl md:text-5xl font-extrabold text-center bg-gradient-to-r from-green-400 via-blue-400 to-purple-500 bg-clip-text text-transparent drop-shadow-lg animate-pulse mb-14">
+        📊 Performance Overview
       </h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-6xl mx-auto">
-        <div className="bg-[#111827] rounded-2xl p-6 shadow-lg border border-indigo-800/40 hover:shadow-indigo-700/30 transition duration-300">
-          <h2 className="text-xl font-semibold mb-4 text-indigo-300">
-            📚 Subject-wise Accuracy
-          </h2>
-          <div className="p-2 bg-[#1e293b] rounded-xl shadow-inner">
-            <Bar data={subjectData} />
-          </div>
-        </div>
-
-        <div className="bg-[#111827] rounded-2xl p-6 shadow-lg border border-indigo-800/40 hover:shadow-indigo-700/30 transition duration-300">
-          <h2 className="text-xl font-semibold mb-4 text-indigo-300">
-            🎯 Overall Performance
+      <div className="max-w-3xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="bg-[#111827] rounded-2xl p-6 shadow-lg border border-green-700/40">
+          <h2 className="text-xl font-semibold mb-4 text-green-400">
+            🎯 Accuracy Chart
           </h2>
           <div className="p-4 bg-[#1e293b] rounded-xl shadow-inner">
             <Pie data={pieData} />
           </div>
         </div>
-      </div>
 
-      <div className="max-w-4xl mx-auto mt-14 bg-[#111827] p-6 rounded-2xl border border-red-600/40 shadow-lg">
-        <h3 className="text-2xl font-bold text-red-400 mb-4">
-          ⚠️ Weak Chapters
-        </h3>
-        <ul className="space-y-2 text-gray-300 text-base pl-5 list-disc marker:text-red-400">
-          <li>
-            <span className="text-white">Physics:</span> Rotational Motion – 40%
-          </li>
-          <li>
-            <span className="text-white">Math:</span> Trigonometry – 50%
-          </li>
-          <li>
-            <span className="text-white">Chemistry:</span> Organic Naming – 30%
-          </li>
-        </ul>
-        <p className="text-sm text-gray-400 mt-4 italic">
-          💡 Hint: Practice these topics again to boost accuracy!
-        </p>
+        <div className="bg-[#111827] rounded-2xl p-6 shadow-lg border border-indigo-700/40 flex flex-col justify-center items-center">
+          <h2 className="text-2xl font-bold text-indigo-300 mb-4">
+            📈 Summary
+          </h2>
+          <p className="text-lg text-white">
+            ✅ Correct:{" "}
+            <span className="text-green-400 font-bold">{correct}</span>
+          </p>
+          <p className="text-lg text-white">
+            ❌ Wrong: <span className="text-red-400 font-bold">{wrong}</span>
+          </p>
+          <p className="text-lg text-white mt-4">
+            🔢 Accuracy:{" "}
+            <span className="text-blue-400 font-extrabold">{accuracy}%</span>
+          </p>
+        </div>
       </div>
     </div>
   );

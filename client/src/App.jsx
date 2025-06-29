@@ -28,6 +28,7 @@ import MockConfig from "./pages/MockTest/MockConfig";
 import MockTest from "./pages/MockTest/MockTest";
 import MockResult from "./pages/MockTest/MockResult";
 import Profile from "./pages/Profile/Profile";
+import ResultDetails from "./pages/ResultDetails/ResultDetails";
 
 function App() {
   return (
@@ -77,6 +78,7 @@ function App() {
         />
         <Route path="/unauthorized" element={<Unauthorized />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/student/results/:resultId" element={<ResultDetails />} />
       </Routes>
     </Router>
   );
