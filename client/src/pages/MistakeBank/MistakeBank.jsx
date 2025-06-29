@@ -1,77 +1,64 @@
 import React, { useEffect, useState } from "react";
-
-// Dummy data (replace with backend API later)
-const mockMistakes = [
-  {
-    id: 1,
-    question: "What is the value of g on Earth?",
-    options: ["9.8 m/s²", "10 m/s²", "9.6 m/s²", "9.2 m/s²"],
-    selectedAnswer: "10 m/s²",
-    correctAnswer: "9.8 m/s²",
-    explanation: "Standard gravitational acceleration is 9.8 m/s² on Earth.",
-  },
-  {
-    id: 2,
-    question: "Who discovered Penicillin?",
-    options: ["Marie Curie", "Alexander Fleming", "Newton", "Einstein"],
-    selectedAnswer: "Marie Curie",
-    correctAnswer: "Alexander Fleming",
-    explanation: "Alexander Fleming discovered penicillin in 1928.",
-  },
-];
+import api from "../../utils/api";
 
 const MistakeBank = () => {
   const [mistakes, setMistakes] = useState([]);
 
   useEffect(() => {
-    setMistakes(mockMistakes);
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (!user?._id) return;
+
+    const fetchMistakes = async () => {
+      try {
+        const res = await api.get(`/mock-test/mistakes/${user._id}`);
+        setMistakes(res.data);
+      } catch (err) {
+        console.error("❌ Failed to load mistake bank:", err);
+      }
+    };
+
+    fetchMistakes();
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0f172a] via-[#1f2937] to-[#111827] px-4 py-12 text-white">
-      <h1 className="text-4xl font-extrabold text-center bg-gradient-to-r from-red-400 via-pink-400 to-purple-500 bg-clip-text text-transparent mb-12 animate-pulse drop-shadow-md">
+    <div className="min-h-screen bg-gradient-to-br from-[#e0f7fa] via-[#e1bee7] to-[#f3e5f5] px-4 py-12 text-gray-900">
+      <h1 className="text-4xl font-extrabold text-center bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent mb-14 animate-pulse drop-shadow-lg">
         ❌ Mistake Bank
       </h1>
 
       {mistakes.length === 0 ? (
-        <p className="text-center text-gray-400 text-lg">
+        <p className="text-center text-gray-600 text-lg">
           No mistakes yet. You're flawless 🧠✨
         </p>
       ) : (
-        <div className="space-y-8 max-w-5xl mx-auto">
-          {mistakes.map((q) => (
+        <div className="space-y-10 max-w-6xl mx-auto">
+          {mistakes.map((q, index) => (
             <div
-              key={q.id}
-              className="bg-[#1e293b] border border-red-500/40 rounded-2xl p-6 shadow-lg transition hover:shadow-red-500/20"
+              key={index}
+              className="rounded-3xl bg-white/60 backdrop-blur-xl border border-white/40 shadow-[0_0_30px_rgba(0,0,0,0.05)] p-6 md:p-8 hover:shadow-[0_0_40px_rgba(0,0,0,0.1)] transition-all duration-300"
             >
-              <h2 className="text-xl font-bold mb-4 text-red-300">
-                {q.question}
+              <h2 className="text-xl md:text-2xl font-bold mb-4 text-pink-700">
+                ❓ {q.question}
               </h2>
 
-              <ul className="space-y-2 mb-4">
-                {q.options.map((opt, idx) => {
-                  let classes = "px-4 py-2 rounded-lg transition-all";
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div className="bg-red-100/60 backdrop-blur-sm border border-red-200 rounded-xl p-4 shadow-inner">
+                  <p className="text-red-600 font-semibold">❌ Your Answer</p>
+                  <p className="text-gray-900 text-lg">{q.selectedAnswer}</p>
+                </div>
+                <div className="bg-green-100/60 backdrop-blur-sm border border-green-200 rounded-xl p-4 shadow-inner">
+                  <p className="text-green-600 font-semibold">
+                    ✅ Correct Answer
+                  </p>
+                  <p className="text-gray-900 text-lg">{q.correctAnswer}</p>
+                </div>
+              </div>
 
-                  if (opt === q.correctAnswer) {
-                    classes +=
-                      " bg-green-700 text-white border border-green-500";
-                  } else if (opt === q.selectedAnswer) {
-                    classes += " bg-red-700 text-white border border-red-500";
-                  } else {
-                    classes += " bg-gray-800 text-gray-300";
-                  }
-
-                  return (
-                    <li key={idx} className={classes}>
-                      {opt}
-                    </li>
-                  );
-                })}
-              </ul>
-
-              <div className="text-sm text-cyan-300 italic border-l-4 border-cyan-500 pl-4">
+              <div className="bg-purple-100/60 border-l-4 border-purple-400 backdrop-blur-md p-4 rounded-xl text-sm text-purple-700 italic">
                 📘 Explanation:{" "}
-                <span className="text-white">{q.explanation}</span>
+                <span className="text-gray-900 font-medium">
+                  {q.explanation}
+                </span>
               </div>
             </div>
           ))}

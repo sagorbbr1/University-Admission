@@ -28,11 +28,15 @@ const ResultDetails = () => {
 
   if (loading)
     return (
-      <div className="text-center mt-10 text-white">Loading result...</div>
+      <div className="text-center mt-10 text-gray-800 font-medium">
+        Loading result...
+      </div>
     );
   if (!result)
     return (
-      <div className="text-center mt-10 text-red-400">Result not found</div>
+      <div className="text-center mt-10 text-red-500 font-semibold">
+        Result not found
+      </div>
     );
 
   const pieData = {
@@ -47,48 +51,47 @@ const ResultDetails = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white px-4 py-10">
-      <h1 className="text-4xl font-extrabold text-center text-indigo-400 drop-shadow mb-10">
+    <div className="min-h-screen bg-gradient-to-br from-[#e0f7fa] via-[#e1bee7] to-[#f3e5f5] px-4 py-12 text-gray-900">
+      <h1 className="text-4xl font-extrabold text-center bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-600 bg-clip-text text-transparent mb-10 drop-shadow-md">
         📊 Individual Result Analysis
       </h1>
 
-      <div className="max-w-4xl mx-auto bg-[#111827] p-6 rounded-2xl shadow-lg border border-indigo-600/40">
-        <p className="text-lg mb-2">
+      <div className="max-w-4xl mx-auto rounded-3xl p-6 md:p-10 backdrop-blur-2xl bg-white/50 border border-white/30 shadow-2xl">
+        <p className="text-lg mb-2 font-semibold">
           বিশ্ববিদ্যালয়:{" "}
-          <span className="text-green-400 font-bold">{result.university}</span>
+          <span className="text-green-600">{result.university}</span>
         </p>
-        <p className="text-lg mb-4">
-          ইউনিট:{" "}
-          <span className="text-yellow-400 font-bold">{result.unit}</span>
+        <p className="text-lg mb-6 font-semibold">
+          ইউনিট: <span className="text-yellow-600">{result.unit}</span>
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="bg-[#1e293b] p-4 rounded-xl shadow-inner">
+          <div className="bg-white/30 backdrop-blur-xl rounded-xl p-6 border border-white/40 shadow-lg">
             <Pie data={pieData} />
           </div>
 
-          <div className="flex flex-col justify-center items-center space-y-4 text-lg">
+          <div className="flex flex-col justify-center items-start space-y-4 text-lg font-medium">
             <p>
               ✅ Correct:{" "}
-              <span className="text-green-400 font-bold">
+              <span className="text-green-600 font-bold">
                 {result.correctCount}
               </span>
             </p>
             <p>
               ❌ Wrong:{" "}
-              <span className="text-red-400 font-bold">
+              <span className="text-red-500 font-bold">
                 {result.wrongCount}
               </span>
             </p>
             <p>
               🧮 Total:{" "}
-              <span className="text-blue-400 font-bold">
+              <span className="text-blue-600 font-bold">
                 {result.totalQuestions}
               </span>
             </p>
             <p>
               📅 Taken at:{" "}
-              <span className="text-gray-400">
+              <span className="text-gray-700 font-semibold">
                 {new Date(result.createdAt).toLocaleString()}
               </span>
             </p>

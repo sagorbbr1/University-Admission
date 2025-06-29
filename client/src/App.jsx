@@ -13,7 +13,6 @@ import Notice from "./pages/Notice/Notice";
 import DailyChallenge from "./pages/DailyChallenge/DailyChallenge";
 import MistakeBank from "./pages/MistakeBank/MistakeBank";
 import ResultAnalysis from "./pages/Result/ResultAnalysis";
-import WeaknessPage from "./pages/Weakness/WeaknessPage";
 import ForumPage from "./pages/ForumPage/ForumPage";
 import UniversitySelect from "./pages/QuestionBank/UniversitySelect";
 import UnitSelect from "./pages/QuestionBank/UnitSelect";
@@ -56,7 +55,6 @@ function App() {
         <Route path="/daily-challenge" element={<DailyChallenge />} />
         <Route path="/mistake-bank" element={<MistakeBank />} />
         <Route path="/results" element={<ResultAnalysis />} />
-        <Route path="/weakness" element={<WeaknessPage />} />
         <Route path="/forum" element={<ForumPage />} />
         <Route path="/questionbank" element={<UniversitySelect />} />
         <Route path="/questionbank/:university" element={<UnitSelect />} />

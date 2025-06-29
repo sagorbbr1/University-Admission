@@ -5,13 +5,10 @@ const MockConfig = () => {
   const navigate = useNavigate();
   const { university, unit } = useParams();
 
-  // Generate options: 5, 10, ..., 100
   const questionOptions = Array.from({ length: 20 }, (_, i) => (i + 1) * 5);
-
   const [questionCount, setQuestionCount] = useState(25);
   const [duration, setDuration] = useState(25);
 
-  // Sync duration with questionCount automatically
   useEffect(() => {
     setDuration(questionCount);
   }, [questionCount]);
@@ -31,21 +28,21 @@ const MockConfig = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#141e30] to-[#243b55] flex flex-col items-center pt-20 px-6 pb-10 text-white">
-      <h1 className="text-4xl font-extrabold mb-10 drop-shadow-lg text-center">
-        ⚙️ কনফিগার করুন
+    <div className="min-h-screen bg-gradient-to-br from-[#e0f7fa] via-[#e1bee7] to-[#f3e5f5] flex flex-col items-center pt-20 px-6 pb-10 text-gray-800">
+      <h1 className="text-4xl font-extrabold mb-10 text-center bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-600 text-transparent bg-clip-text drop-shadow-lg">
+        ⚙️ মক টেস্ট কনফিগার করুন
       </h1>
 
-      <div className="bg-white/20 backdrop-blur-lg border border-white/30 rounded-3xl p-12 max-w-4xl w-full shadow-[0_8px_30px_rgba(0,0,0,0.3)]">
-        <div className="max-w-md mx-auto space-y-8 select-none">
+      <div className="bg-white/30 backdrop-blur-2xl border border-white/40 rounded-3xl p-10 max-w-2xl w-full shadow-2xl">
+        <div className="space-y-8">
           <div>
-            <label className="block mb-3 text-lg font-semibold">
+            <label className="block mb-3 text-lg font-semibold text-gray-700">
               প্রশ্নের সংখ্যা
             </label>
             <select
               value={questionCount}
               onChange={(e) => setQuestionCount(Number(e.target.value))}
-              className="w-full p-4 rounded-3xl bg-gray-800 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 shadow-sm transition"
+              className="w-full p-4 rounded-2xl bg-white/40 text-gray-800 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-inner backdrop-blur-md"
             >
               {questionOptions.map((q) => (
                 <option key={q} value={q}>
@@ -56,21 +53,21 @@ const MockConfig = () => {
           </div>
 
           <div>
-            <label className="block mb-3 text-lg font-semibold">
+            <label className="block mb-3 text-lg font-semibold text-gray-700">
               সময় (মিনিট)
             </label>
             <input
               type="number"
               value={duration}
               readOnly
-              className="w-full p-4 rounded-3xl bg-gray-800 text-white border border-gray-700 cursor-not-allowed"
+              className="w-full p-4 rounded-2xl bg-white/30 text-gray-800 border border-gray-300 cursor-not-allowed shadow-inner backdrop-blur-md"
               title="সময় প্রশ্ন সংখ্যার সাথে স্বয়ংক্রিয় সামঞ্জস্যপূর্ণ"
             />
           </div>
 
           <button
             onClick={handleStart}
-            className="w-full py-4 rounded-3xl bg-green-600 hover:bg-green-700 shadow-lg font-semibold transition"
+            className="w-full py-4 rounded-2xl bg-gradient-to-r from-green-400 to-green-600 text-white font-bold shadow-md hover:shadow-xl hover:scale-[1.02] transition duration-300"
           >
             ✅ মক টেস্ট শুরু করুন
           </button>

@@ -1,4 +1,5 @@
 const MockTestResult = require("../models/MockTestResult");
+const Question = require("../models/Question");
 
 const submitMockTest = async (req, res) => {
   try {
@@ -77,8 +78,41 @@ const getMockResultById = async (req, res) => {
   }
 };
 
+const getMistakeBank = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const results = await MockTestResult.find({ userId });
+
+    const mistakes = [];
+
+    for (const result of results) {
+      for (const ans of result.answers) {
+        if (!ans.isCorrect) {
+          const question = await Question.findById(ans.questionId);
+          if (question) {
+            mistakes.push({
+              question: question.question,
+              options: question.options,
+              correctAnswer: ans.correctOption,
+              selectedAnswer: ans.selectedOption,
+              explanation: question.explanation || "No explanation available.",
+            });
+          }
+        }
+      }
+    }
+
+    res.status(200).json(mistakes);
+  } catch (error) {
+    console.error("❌ Error fetching mistakes:", error);
+    res.status(500).json({ message: "Failed to fetch mistake bank." });
+  }
+};
+
 module.exports = {
   submitMockTest,
   getBasicMockAnalysis,
   getMockResultById,
+  getMistakeBank,
 };
