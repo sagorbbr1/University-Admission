@@ -23,6 +23,8 @@ const mockTestResultSchema = new mongoose.Schema(
     totalQuestions: Number,
     correctCount: Number,
     wrongCount: Number,
+    percentage: Number,
+    timeTaken: Number,
     answers: [answerSchema],
     takenAt: {
       type: Date,

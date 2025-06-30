@@ -26,6 +26,8 @@ const ResultDetails = () => {
     fetchResult();
   }, [resultId]);
 
+  console.log(result);
+
   if (loading)
     return (
       <div className="text-center mt-10 text-gray-800 font-medium">

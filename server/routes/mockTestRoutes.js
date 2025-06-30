@@ -5,6 +5,7 @@ const {
   getBasicMockAnalysis,
   getMockResultById,
   getMistakeBank,
+  getLeaderboard,
 } = require("../controllers/mockResultController");
 
 router.post("/submit", submitMockTest);
@@ -17,5 +18,8 @@ router.get("/analysis/:userId", getBasicMockAnalysis);
 router.get("/:resultId", getMockResultById);
 
 router.get("/mistakes/:userId", getMistakeBank);
+
+// GET leaderboard
+router.get("/leaderboard/:university/:unit", getLeaderboard);
 
 module.exports = router;

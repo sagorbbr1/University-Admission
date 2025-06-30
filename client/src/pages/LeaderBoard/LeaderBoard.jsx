@@ -1,51 +1,79 @@
-import { useState } from "react";
-
-const mockData = [
-  { name: "Sagor Boss", score: 95, district: "Dhaka", batch: "2025" },
-  { name: "Tanvir Ahmed", score: 90, district: "Rajshahi", batch: "2025" },
-  { name: "Mim Akter", score: 88, district: "Chittagong", batch: "2024" },
-];
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import api from "../../utils/api";
 
 const Leaderboard = () => {
-  const [filter, setFilter] = useState("all");
+  const { university, unit } = useParams();
+  const [leaders, setLeaders] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const filtered =
-    filter === "all"
-      ? mockData
-      : mockData.filter((entry) => entry.batch === filter);
+  useEffect(() => {
+    const fetchLeaderboard = async () => {
+      try {
+        const res = await api.get(
+          `/mock-test/leaderboard/${university}/${unit}`
+        );
+        if (res.ok && res.data?.data) {
+          setLeaders(res.data.data);
+        }
+      } catch (err) {
+        console.error("❌ Error loading leaderboard:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchLeaderboard();
+  }, [university, unit]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-purple-200 to-pink-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+        <p className="text-xl font-semibold text-gray-700 dark:text-white">
+          ⏳ লোড হচ্ছে...
+        </p>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-6">
-      <h1 className="text-2xl font-bold text-center mb-6">🏆 লিডারবোর্ড</h1>
+    <div className="min-h-screen py-12 px-4 bg-gradient-to-br from-blue-100 via-purple-200 to-pink-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+      <h1 className="text-4xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-500 drop-shadow-lg mb-10">
+        🏆 লিডারবোর্ড: {university && university.toUpperCase()} (
+        {unit && unit.toUpperCase()})
+      </h1>
 
-      <div className="mb-4 text-center">
-        <select
-          className="p-2 rounded bg-gray-800"
-          onChange={(e) => setFilter(e.target.value)}
-        >
-          <option value="all">সব ব্যাচ</option>
-          <option value="2025">2025</option>
-          <option value="2024">2024</option>
-        </select>
-      </div>
-
-      <div className="space-y-4 max-w-xl mx-auto">
-        {filtered.map((user, i) => (
-          <div
-            key={i}
-            className="bg-gray-800 p-4 rounded flex justify-between items-center"
-          >
-            <div>
-              <p className="font-bold">
-                {i + 1}. {user.name}
-              </p>
-              <p className="text-sm text-gray-400">
-                {user.district} | ব্যাচ: {user.batch}
-              </p>
-            </div>
-            <p className="text-xl font-bold text-yellow-400">{user.score} 🔥</p>
+      <div className="max-w-3xl mx-auto space-y-4">
+        {leaders.length === 0 ? (
+          <div className="text-center text-gray-700 dark:text-gray-200 text-xl">
+            😔 এখনও কেউ এই ইউনিটে মক টেস্ট দেয়নি।
           </div>
-        ))}
+        ) : (
+          leaders.map((entry, idx) => (
+            <div
+              key={entry._id}
+              className="flex items-center justify-between bg-white/60 dark:bg-white/10 p-5 rounded-2xl shadow-md backdrop-blur-xl"
+            >
+              <div className="flex items-center gap-4">
+                <span className="text-2xl font-bold text-purple-600 dark:text-purple-300">
+                  #{idx + 1}
+                </span>
+                <div>
+                  <p className="font-semibold text-gray-900 dark:text-white">
+                    {entry.userId?.name || "অজানা"}
+                  </p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">
+                    {entry.percentage || 0}% সঠিক | সময়:{" "}
+                    {entry.timeTaken || "--"} মিনিট
+                  </p>
+                </div>
+              </div>
+              <div className="text-lg font-bold text-green-600 dark:text-green-400">
+                ✅ {entry.correctCount}/{entry.totalQuestions}
+              </div>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );

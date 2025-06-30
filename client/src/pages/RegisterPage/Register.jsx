@@ -5,12 +5,15 @@ import { useUser } from "../../context/UserContext.jsx";
 
 export default function RegisterPage() {
   const { login } = useUser();
-
   const navigate = useNavigate();
+
   const [form, setForm] = useState({
     name: "",
     email: "",
     password: "",
+    phone: "",
+    collegeName: "",
+    district: "",
   });
 
   const [error, setError] = useState("");
@@ -27,7 +30,6 @@ export default function RegisterPage() {
       const response = await api.post("/auth/register", form);
       const { status, data } = response;
 
-      // Accept 200 or 201 as success statuses
       if (
         ![200, 201].includes(status) ||
         data?.message === "User already exists"
@@ -53,52 +55,60 @@ export default function RegisterPage() {
 
         <form className="space-y-4" onSubmit={handleSubmit}>
           {/* Name */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
-              Full Name
-            </label>
-            <input
-              type="text"
-              name="name"
-              value={form.name}
-              onChange={handleChange}
-              placeholder="John Doe"
-              required
-              className="mt-1 block w-full px-4 py-2 bg-white/60 dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 transition"
-            />
-          </div>
+          <Input
+            label="Full Name"
+            name="name"
+            value={form.name}
+            onChange={handleChange}
+            placeholder="John Doe"
+          />
 
           {/* Email */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
-              Email
-            </label>
-            <input
-              type="email"
-              name="email"
-              value={form.email}
-              onChange={handleChange}
-              placeholder="you@example.com"
-              required
-              className="mt-1 block w-full px-4 py-2 bg-white/60 dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 transition"
-            />
-          </div>
+          <Input
+            label="Email"
+            name="email"
+            type="email"
+            value={form.email}
+            onChange={handleChange}
+            placeholder="you@example.com"
+          />
+
+          {/* Phone */}
+          <Input
+            label="Phone Number"
+            name="phone"
+            value={form.phone}
+            onChange={handleChange}
+            placeholder="01XXXXXXXXX"
+          />
+
+          {/* College Name */}
+          <Input
+            label="College Name"
+            name="collegeName"
+            value={form.collegeName}
+            onChange={handleChange}
+            placeholder="Dhaka College"
+          />
+
+          {/* District */}
+          <Input
+            label="District"
+            name="district"
+            value={form.district}
+            onChange={handleChange}
+            placeholder="Dhaka"
+          />
 
           {/* Password */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
-              Password
-            </label>
-            <input
-              type="password"
-              name="password"
-              value={form.password}
-              onChange={handleChange}
-              placeholder="••••••••"
-              required
-              className="mt-1 block w-full px-4 py-2 bg-white/60 dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 transition"
-            />
-          </div>
+          <Input
+            label="Password"
+            name="password"
+            type="password"
+            value={form.password}
+            onChange={handleChange}
+            placeholder="••••••••"
+          />
 
           {/* Error */}
           {error && (
@@ -128,3 +138,27 @@ export default function RegisterPage() {
     </div>
   );
 }
+
+const Input = ({
+  label,
+  name,
+  value,
+  onChange,
+  placeholder,
+  type = "text",
+}) => (
+  <div>
+    <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+      {label}
+    </label>
+    <input
+      type={type}
+      name={name}
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      required={["name", "email", "password"].includes(name)}
+      className="mt-1 block w-full px-4 py-2 bg-white/60 dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 transition"
+    />
+  </div>
+);

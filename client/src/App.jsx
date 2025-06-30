@@ -28,6 +28,10 @@ import MockTest from "./pages/MockTest/MockTest";
 import MockResult from "./pages/MockTest/MockResult";
 import Profile from "./pages/Profile/Profile";
 import ResultDetails from "./pages/ResultDetails/ResultDetails";
+import AddQuestion from "./pages/Admin/AddQuestion";
+import BulkUpload from "./pages/Admin/BulkUpload";
+import AllQuestions from "./pages/Admin/AllQuestions";
+import AllStudents from "./pages/Admin/AllStudents";
 
 function App() {
   return (
@@ -50,7 +54,10 @@ function App() {
         <Route path="/mock/start/:university/:unit" element={<MockTest />} />
         <Route path="/mock/result/:attemptId" element={<MockResult />} />
         //Others
-        <Route path="/leaderboard" element={<Leaderboard />} />
+        <Route
+          path="/leaderboard/:university/:unit"
+          element={<Leaderboard />}
+        />
         <Route path="/notices" element={<Notice />} />
         <Route path="/daily-challenge" element={<DailyChallenge />} />
         <Route path="/mistake-bank" element={<MistakeBank />} />
@@ -66,6 +73,10 @@ function App() {
           path="/questionbank/:university/:unit/:year"
           element={<QuestionDisplay />}
         />
+        <Route path="/unauthorized" element={<Unauthorized />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/student/results/:resultId" element={<ResultDetails />} />
+        //Admin
         <Route
           path="/admin"
           element={
@@ -74,9 +85,10 @@ function App() {
             </AdminRoute>
           }
         />
-        <Route path="/unauthorized" element={<Unauthorized />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/student/results/:resultId" element={<ResultDetails />} />
+        <Route path="/admin/add-question" element={<AddQuestion />} />
+        <Route path="/admin/bulk-upload" element={<BulkUpload />} />
+        <Route path="/admin/questions" element={<AllQuestions />} />
+        <Route path="/admin/users" element={<AllStudents />} />
       </Routes>
     </Router>
   );

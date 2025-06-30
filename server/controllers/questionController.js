@@ -63,8 +63,6 @@ const bulkUpload = async (req, res) => {
     readStream
       .pipe(csv())
       .on("data", (row) => {
-        console.log("👉 Parsed Row:", row);
-
         const {
           university,
           unit,
@@ -245,8 +243,6 @@ const getQuestionsByUniversityUnit = async (req, res) => {
     university = university.trim();
     unit = unit.trim();
 
-    console.log("Querying questions with:", { university, unit });
-
     const limit = parseInt(req.query.limit) || 25;
 
     // Case-insensitive regex match
@@ -254,10 +250,6 @@ const getQuestionsByUniversityUnit = async (req, res) => {
       university: new RegExp(`^${university}$`, "i"),
       unit: new RegExp(`^${unit}$`, "i"),
     }).limit(limit);
-
-    console.log(
-      `Found ${questions.length} questions for ${university} - ${unit}`
-    );
 
     if (!questions.length) {
       return res

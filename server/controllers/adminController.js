@@ -45,7 +45,7 @@ const getAllStudents = async (req, res) => {
     const skip = (page - 1) * limit;
     const exportCsv = req.query.exportCsv === "true";
 
-    // Find only users with role "student"
+    // Fetch only students
     const students = await User.find({ role: "student" })
       .sort({ createdAt: -1 })
       .skip(skip)
@@ -53,6 +53,7 @@ const getAllStudents = async (req, res) => {
 
     const total = await User.countDocuments({ role: "student" });
 
+    // Merge mock test stats
     const studentsWithStats = await Promise.all(
       students.map(async (student) => {
         const results = await MockTestResult.aggregate([
@@ -72,8 +73,9 @@ const getAllStudents = async (req, res) => {
           _id: student._id,
           name: student.name,
           email: student.email,
-          university: student.university || "N/A",
-          unit: student.unit || "N/A",
+          phone: student.phone || "N/A",
+          district: student.district || "N/A",
+          collegeName: student.collegeName || "N/A",
           correctCount: stats.totalCorrect,
           wrongCount: stats.totalWrong,
           registeredAt: student.createdAt,
@@ -81,12 +83,14 @@ const getAllStudents = async (req, res) => {
       })
     );
 
+    // CSV export if requested
     if (exportCsv) {
       const fields = [
         { label: "Name", value: "name" },
         { label: "Email", value: "email" },
-        { label: "University", value: "university" },
-        { label: "Unit", value: "unit" },
+        { label: "Phone", value: "phone" },
+        { label: "District", value: "district" },
+        { label: "College", value: "collegeName" },
         { label: "Correct Answers", value: "correctCount" },
         { label: "Wrong Answers", value: "wrongCount" },
         {
@@ -94,6 +98,7 @@ const getAllStudents = async (req, res) => {
           value: (row) => new Date(row.registeredAt).toISOString(),
         },
       ];
+
       const parser = new Parser({ fields });
       const csv = parser.parse(studentsWithStats);
 

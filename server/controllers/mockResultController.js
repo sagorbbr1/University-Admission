@@ -3,23 +3,39 @@ const Question = require("../models/Question");
 
 const submitMockTest = async (req, res) => {
   try {
-    const { userId, university, unit, answers } = req.body;
+    const { userId, university, unit, answers, timeTaken } = req.body;
+
+    if (!userId || !university || !unit || !Array.isArray(answers)) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
 
     let correctCount = 0;
     let wrongCount = 0;
 
     const answerDetails = answers.map((ans) => {
-      const isCorrect = ans.selectedOption === ans.correctOption;
+      const selected =
+        typeof ans.selectedOption === "string" &&
+        ans.selectedOption.trim() !== ""
+          ? ans.selectedOption.trim()
+          : "not-answered";
+
+      const isCorrect = selected === ans.correctOption;
+
       if (isCorrect) correctCount++;
-      else wrongCount++;
+      else if (selected !== "not-answered") wrongCount++;
 
       return {
         questionId: ans.questionId,
-        selectedOption: ans.selectedOption,
+        selectedOption: selected,
         correctOption: ans.correctOption,
         isCorrect,
       };
     });
+
+    const percentage =
+      answers.length > 0
+        ? Math.round((correctCount / answers.length) * 100)
+        : 0;
 
     const newResult = await MockTestResult.create({
       userId,
@@ -28,13 +44,22 @@ const submitMockTest = async (req, res) => {
       totalQuestions: answers.length,
       correctCount,
       wrongCount,
+      percentage,
+      timeTaken,
       answers: answerDetails,
     });
 
-    res.status(201).json({ success: true, resultId: newResult._id });
+    res.status(201).json({
+      success: true,
+      resultId: newResult._id,
+    });
   } catch (error) {
-    console.error("Mock test submit error:", error);
-    res.status(500).json({ success: false, message: "Something went wrong" });
+    console.error("❌ Mock test submit error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Something went wrong",
+      error: error.message,
+    });
   }
 };
 
@@ -110,9 +135,32 @@ const getMistakeBank = async (req, res) => {
   }
 };
 
+const getLeaderboard = async (req, res) => {
+  try {
+    const { university, unit } = req.params;
+
+    if (!university || !unit) {
+      return res.status(400).json({ message: "University or unit missing" });
+    }
+
+    const results = await MockTestResult.find({ university, unit })
+      .sort({ percentage: -1, timeTaken: 1, createdAt: -1 }) // High % first, less time better, newest first
+      .limit(10)
+      .populate("userId", "name email");
+
+    res.status(200).json({ success: true, data: results });
+  } catch (error) {
+    console.error("❌ Leaderboard fetch error:", error);
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to fetch leaderboard" });
+  }
+};
+
 module.exports = {
   submitMockTest,
   getBasicMockAnalysis,
   getMockResultById,
   getMistakeBank,
+  getLeaderboard,
 };

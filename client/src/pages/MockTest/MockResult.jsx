@@ -5,18 +5,17 @@ import api from "../../utils/api";
 const MockResult = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const submittedRef = useRef(false); // prevents double submit
+  const submittedRef = useRef(false);
 
   const [correctCount, setCorrectCount] = useState(0);
   const [resultId, setResultId] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (submittedRef.current) return; // already submitted, skip
+    if (submittedRef.current) return;
     submittedRef.current = true;
 
     const { university, unit, questions, answers } = location.state || {};
-
     if (!questions || !answers) {
       navigate("/mock");
       return;
@@ -53,7 +52,6 @@ const MockResult = () => {
         });
 
         setResultId(res.data.resultId);
-        console.log("✅ Result submitted to DB:", res.data);
       } catch (err) {
         console.error("❌ Error saving result:", err);
       } finally {
@@ -62,81 +60,102 @@ const MockResult = () => {
     };
 
     submitResult();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // run once on mount
+  }, []);
 
   if (loading) {
-    return <div className="text-center mt-10">Loading result...</div>;
+    return (
+      <div className="text-center mt-10 text-lg">⏳ ফলাফল লোড হচ্ছে...</div>
+    );
   }
 
   const { university, unit, questions, answers } = location.state || {};
   const total = questions?.length || 0;
   const attempted = answers ? Object.keys(answers).length : 0;
   const wrong = attempted - correctCount;
-  const score = total ? Math.round((correctCount / total) * 100) : 0;
+
+  // 💥 Custom Scoring Rule
+  const totalScore = (correctCount * 1 - wrong * 0.25).toFixed(2);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-100 via-blue-200 to-purple-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-all duration-500 px-6 py-10">
-      <div className="bg-white/30 dark:bg-white/10 backdrop-blur-md rounded-3xl shadow-2xl max-w-xl w-full p-8">
-        <h1 className="text-3xl font-extrabold mb-8 text-gray-900 dark:text-white drop-shadow-md text-center">
-          🎯 ফলাফল
-        </h1>
+    <div className="min-h-screen px-4 py-10 bg-gradient-to-br from-green-100 via-blue-200 to-purple-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-all duration-500">
+      <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-8 bg-white/30 dark:bg-white/10 backdrop-blur-2xl p-10 rounded-3xl shadow-2xl">
+        {/* Left Block */}
+        <div className="space-y-6">
+          <h1 className="text-4xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-600 drop-shadow-md">
+            🎯 আপনার ফলাফল
+          </h1>
 
-        <div className="bg-white/40 dark:bg-white/20 backdrop-blur-sm border border-white/30 rounded-2xl p-6 space-y-6 shadow-lg">
-          <div className="text-lg font-semibold text-gray-900 dark:text-white">
-            বিশ্ববিদ্যালয়:{" "}
-            <span className="text-green-500 font-bold">
-              {university?.toUpperCase()}
-            </span>
-          </div>
-          <div className="text-lg font-semibold text-gray-900 dark:text-white">
-            ইউনিট:{" "}
-            <span className="text-yellow-400 font-bold">
-              {unit?.toUpperCase()}
-            </span>
-          </div>
-
-          <div className="text-2xl font-extrabold text-blue-500 text-center mt-4 drop-shadow-md">
-            মোট স্কোর: {score}% ({correctCount} / {total})
-          </div>
-
-          <div className="grid grid-cols-2 gap-4 mt-6">
-            <div className="bg-green-700 bg-opacity-80 p-4 rounded-xl font-semibold text-white shadow-md">
-              ✅ সঠিক: {correctCount}
+          <div className="bg-white/40 dark:bg-white/20 p-6 rounded-xl shadow-md space-y-4">
+            <div className="text-xl font-semibold text-gray-800 dark:text-white">
+              বিশ্ববিদ্যালয়:{" "}
+              <span className="text-green-500">
+                {university?.toUpperCase()}
+              </span>
             </div>
-            <div className="bg-red-700 bg-opacity-80 p-4 rounded-xl font-semibold text-white shadow-md">
-              ❌ ভুল: {wrong}
+            <div className="text-xl font-semibold text-gray-800 dark:text-white">
+              ইউনিট:{" "}
+              <span className="text-yellow-400">{unit?.toUpperCase()}</span>
             </div>
-            <div className="bg-indigo-700 bg-opacity-80 p-4 rounded-xl font-semibold text-white shadow-md">
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-green-600 p-4 rounded-xl text-white font-semibold shadow-md text-center">
+              ✅ সঠিক উত্তর: {correctCount}
+            </div>
+            <div className="bg-red-600 p-4 rounded-xl text-white font-semibold shadow-md text-center">
+              ❌ ভুল উত্তর: {wrong}
+            </div>
+            <div className="bg-indigo-600 p-4 rounded-xl text-white font-semibold shadow-md text-center">
               🧠 দিয়েছেন: {attempted}
             </div>
-            <div className="bg-gray-700 bg-opacity-80 p-4 rounded-xl font-semibold text-white shadow-md">
-              📝 মোট প্রশ্ন: {total}
+            <div className="bg-gray-700 p-4 rounded-xl text-white font-semibold shadow-md text-center">
+              📄 মোট প্রশ্ন: {total}
             </div>
           </div>
         </div>
 
-        <div className="mt-10 flex justify-center gap-6 flex-wrap">
-          <button
-            onClick={() => navigate("/mock")}
-            className="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-2xl font-semibold text-white shadow-lg transition"
-          >
-            🔁 আবার দিন
-          </button>
-          <button
-            onClick={() => navigate("/")}
-            className="bg-gray-600 hover:bg-gray-700 px-6 py-3 rounded-2xl font-semibold text-white shadow-lg transition"
-          >
-            🏠 হোম
-          </button>
-          {resultId && (
+        {/* Right Block */}
+        <div className="flex flex-col justify-between space-y-8">
+          <div className="bg-white/50 dark:bg-white/10 p-6 rounded-xl shadow-md text-center space-y-4">
+            <h2 className="text-3xl font-extrabold text-blue-600 dark:text-blue-400 drop-shadow-md">
+              🔢 স্কোর
+            </h2>
+            <p className="text-5xl font-bold text-green-600 dark:text-green-400">
+              {totalScore} / {total}
+            </p>
+            <p className="text-sm text-gray-600 dark:text-gray-300">
+              (সঠিকের জন্য +1, ভুলের জন্য -0.25 কাটা হয়েছে)
+            </p>
+          </div>
+
+          <div className="flex flex-wrap justify-center gap-4">
             <button
-              onClick={() => navigate(`/student/results/${resultId}`)}
-              className="bg-purple-600 hover:bg-purple-700 px-6 py-3 rounded-2xl font-semibold text-white shadow-lg transition"
+              onClick={() => navigate("/mock")}
+              className="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-2xl text-white font-semibold shadow-md transition"
             >
-              📊 ফল বিশ্লেষণ
+              🔁 আবার দিন
             </button>
-          )}
+            <button
+              onClick={() => navigate("/")}
+              className="bg-gray-600 hover:bg-gray-700 px-6 py-3 rounded-2xl text-white font-semibold shadow-md transition"
+            >
+              🏠 হোম
+            </button>
+            {resultId && (
+              <button
+                onClick={() => navigate(`/student/results/${resultId}`)}
+                className="bg-purple-600 hover:bg-purple-700 px-6 py-3 rounded-2xl text-white font-semibold shadow-md transition"
+              >
+                📊 ফল বিশ্লেষণ
+              </button>
+            )}
+            <button
+              onClick={() => navigate(`/leaderboard/${university}/${unit}`)}
+              className="bg-orange-600 hover:bg-orange-700 px-6 py-3 rounded-2xl text-white font-semibold shadow-md transition"
+            >
+              🏆 লিডারবোর্ড
+            </button>
+          </div>
         </div>
       </div>
     </div>

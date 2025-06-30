@@ -15,6 +15,21 @@ const userSchema = new mongoose.Schema(
       enum: ["student", "admin"],
       default: "student",
     },
+    phone: {
+      type: String,
+      match: /^01[3-9]\d{8}$/, // BD phone validation
+      required: false,
+    },
+    collegeName: {
+      type: String,
+      required: false,
+      trim: true,
+    },
+    district: {
+      type: String,
+      required: false,
+      trim: true,
+    },
   },
   { timestamps: true }
 );
