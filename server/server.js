@@ -13,6 +13,7 @@ const questionRoutes = require("./routes/QuestionRoutes.js");
 const mockTestRoutes = require("./routes/mockTestRoutes.js");
 const adminRoutes = require("./routes/AdminRoutes.js");
 const noticeRoutes = require("./routes/noticeRoutes.js");
+const discussionRoutes = require("./routes/discussionRoutes.js");
 
 mongoose
   .connect(process.env.MONGO_URI)
@@ -29,6 +30,7 @@ app.use("/api/questions", questionRoutes);
 app.use("/api/mock-test", mockTestRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/notices", noticeRoutes);
+app.use("/api/discussions", discussionRoutes);
 
 app.get("/", (req, res) => {
   res.send("Hello World!");

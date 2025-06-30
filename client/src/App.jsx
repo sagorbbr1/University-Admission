@@ -31,6 +31,7 @@ import BulkUpload from "./pages/Admin/BulkUpload";
 import AllQuestions from "./pages/Admin/AllQuestions";
 import AllStudents from "./pages/Admin/AllStudents";
 import AdminNoticeManager from "./pages/Admin/AdminNoticeManager";
+import DiscussionDetail from "./pages/ForumPage/DiscussionDetail";
 
 function App() {
   return (
@@ -60,6 +61,7 @@ function App() {
         <Route path="/mistake-bank" element={<MistakeBank />} />
         <Route path="/results" element={<ResultAnalysis />} />
         <Route path="/forum" element={<ForumPage />} />
+        <Route path="/discussion/:id" element={<DiscussionDetail />} />
         <Route path="/questionbank" element={<UniversitySelect />} />
         <Route path="/questionbank/:university" element={<UnitSelect />} />
         <Route
