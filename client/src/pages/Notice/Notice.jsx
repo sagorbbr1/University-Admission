@@ -1,51 +1,64 @@
-import React from "react";
-
-const notices = [
-  {
-    title: "📢 DU Admission Test Date Announced",
-    content:
-      "Dhaka University admission test will be held on 19th July. Admit cards will be available from 10th July.",
-    date: "2025-06-03",
-  },
-  {
-    title: "⚠️ Medical College Application Deadline",
-    content:
-      "Last date for online application is 15th June. No extension will be provided.",
-    date: "2025-06-01",
-  },
-  {
-    title: "📄 New Question Bank Uploaded",
-    content:
-      "BUET and RUET previous year questions have been added in the Question Bank section.",
-    date: "2025-05-30",
-  },
-];
+import React, { useEffect, useState } from "react";
+import api from "../../utils/api";
 
 const Notice = () => {
+  const [notices, setNotices] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await api.get("/notices");
+        if (res.ok) {
+          setNotices(res.data);
+        } else {
+          console.error("⚠️ Notice fetch failed");
+        }
+      } catch (err) {
+        console.error("❌ Error loading notices:", err);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-lg text-gray-600 dark:text-gray-300">
+        🔄 Loading latest notices...
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-indigo-50 to-white dark:from-gray-900 dark:to-black text-gray-800 dark:text-gray-100 px-4 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-[#e0f7fa] via-[#e1bee7] to-[#f3e5f5] px-4 py-10 text-gray-900">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold mb-6 text-center">
+        <h1 className="text-4xl font-extrabold text-center mb-10 bg-gradient-to-r from-pink-500 via-blue-400 to-purple-500 bg-clip-text text-transparent">
           📌 Latest Notices
         </h1>
-        <div className="space-y-6">
-          {notices.map((notice, index) => (
-            <div
-              key={index}
-              className="bg-white dark:bg-gray-800 shadow-md rounded-xl p-6 border border-gray-200 dark:border-gray-700"
-            >
-              <div className="flex justify-between items-center mb-2">
-                <h2 className="text-xl font-semibold">{notice.title}</h2>
-                <span className="text-sm text-gray-500 dark:text-gray-400">
-                  {notice.date}
-                </span>
+
+        {notices.length === 0 ? (
+          <p className="text-center text-gray-500">🚫 No notices found.</p>
+        ) : (
+          <div className="space-y-6">
+            {notices.map((notice, index) => (
+              <div
+                key={notice._id || index}
+                className="bg-white/30 backdrop-blur-lg border border-white/40 shadow-md rounded-2xl p-6 transition hover:shadow-xl"
+              >
+                <div className="flex justify-between items-center mb-3">
+                  <h2 className="text-xl font-semibold text-indigo-800">
+                    {notice.title}
+                  </h2>
+                  <span className="text-sm text-gray-700">
+                    {new Date(notice.date).toLocaleDateString("en-GB")}
+                  </span>
+                </div>
+                <p className="text-gray-800">{notice.content}</p>
               </div>
-              <p className="text-gray-700 dark:text-gray-300">
-                {notice.content}
-              </p>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

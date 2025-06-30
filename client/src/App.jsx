@@ -6,9 +6,7 @@ import NotFound from "./pages/NotFound/NotFound";
 import LoginPage from "./pages/LoginPage/Login";
 import RegisterPage from "./pages/RegisterPage/Register";
 import Dashboard from "./pages/Dashboard/Dashboard";
-import Routine from "./pages/Routine/Routine";
-import RoutineDnD from "./pages/Routine/RoutineDnD";
-import Leaderboard from "./pages/Leaderboard/Leaderboard";
+import Leaderboard from "./pages/LeaderBoard/LeaderBoard";
 import Notice from "./pages/Notice/Notice";
 import DailyChallenge from "./pages/DailyChallenge/DailyChallenge";
 import MistakeBank from "./pages/MistakeBank/MistakeBank";
@@ -32,6 +30,7 @@ import AddQuestion from "./pages/Admin/AddQuestion";
 import BulkUpload from "./pages/Admin/BulkUpload";
 import AllQuestions from "./pages/Admin/AllQuestions";
 import AllStudents from "./pages/Admin/AllStudents";
+import AdminNoticeManager from "./pages/Admin/AdminNoticeManager";
 
 function App() {
   return (
@@ -42,8 +41,6 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/routine" element={<Routine />} />
-        <Route path="/routine-dnd" element={<RoutineDnD />} />
         //MockExam
         <Route path="/mock" element={<MockUniversitySelect />} />
         <Route path="/mock/unit/:university" element={<MockUnitSelect />} />
@@ -89,6 +86,14 @@ function App() {
         <Route path="/admin/bulk-upload" element={<BulkUpload />} />
         <Route path="/admin/questions" element={<AllQuestions />} />
         <Route path="/admin/users" element={<AllStudents />} />
+        <Route
+          path="/admin/announcements"
+          element={
+            <AdminRoute>
+              <AdminNoticeManager />
+            </AdminRoute>
+          }
+        />
       </Routes>
     </Router>
   );
