@@ -32,6 +32,7 @@ import AllQuestions from "./pages/Admin/AllQuestions";
 import AllStudents from "./pages/Admin/AllStudents";
 import AdminNoticeManager from "./pages/Admin/AdminNoticeManager";
 import DiscussionDetail from "./pages/ForumPage/DiscussionDetail";
+import DailyChallengeSubmit from "./pages/Admin/DailyChallengeSubmit";
 
 function App() {
   return (
@@ -95,6 +96,10 @@ function App() {
               <AdminNoticeManager />
             </AdminRoute>
           }
+        />
+        <Route
+          path="/admin/daily-challenge-submissions"
+          element={<DailyChallengeSubmit />}
         />
       </Routes>
     </Router>
