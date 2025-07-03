@@ -1,24 +1,42 @@
-const DailyChallenge = require("../models/DailyChallenge");
-const Participation = require("../models/DailyChallengeParticipation");
-const Question = require("../models/Question");
 const moment = require("moment");
+const DailyChallenge = require("../models/DailyChallenge");
+const DailyChallengeSubmission = require("../models/DailyChallengeSubmission");
+const Question = require("../models/Question");
 
+// GET today's challenge questions
 const getDailyChallenge = async (req, res) => {
   try {
+    const { university, unit } = req.query;
+
+    if (!university || !unit) {
+      return res.status(400).json({ message: "University and unit required" });
+    }
+
     const today = moment().format("YYYY-MM-DD");
 
-    let daily = await DailyChallenge.findOne({ date: today }).populate(
-      "questionIds"
-    );
+    let daily = await DailyChallenge.findOne({
+      date: today,
+      university,
+      unit,
+    }).populate("questionIds");
 
     if (!daily) {
       const randomQuestions = await Question.aggregate([
+        { $match: { university, unit } },
         { $sample: { size: 30 } },
       ]);
+
       const questionIds = randomQuestions.map((q) => q._id);
 
-      daily = await DailyChallenge.create({ date: today, questionIds });
-      daily.questionIds = randomQuestions; // attach for return
+      // Create new challenge for today (no duplicate allowed)
+      daily = await DailyChallenge.findOneAndUpdate(
+        { date: today, university, unit },
+        { $setOnInsert: { questionIds, university, unit, date: today } },
+        { new: true, upsert: true }
+      );
+
+      // Re-fetch populated
+      daily = await DailyChallenge.findById(daily._id).populate("questionIds");
     }
 
     res.status(200).json({ questions: daily.questionIds });
@@ -28,53 +46,93 @@ const getDailyChallenge = async (req, res) => {
   }
 };
 
-// POST /daily-challenge/submit
-
-const submitDailyChallenge = async (req, res) => {
+const getSubmissionStatus = async (req, res) => {
   try {
-    const { userId, answers } = req.body; // answers: [{questionId, selectedOption}]
     const today = moment().format("YYYY-MM-DD");
+    const { userId, university, unit } = req.query;
 
-    // Check if already submitted
-    const existing = await Participation.findOne({
+    const submission = await DailyChallengeSubmission.findOne({
       userId,
-      challengeDate: today,
+      date: today,
+      university,
+      unit,
     });
 
-    if (existing) {
+    if (submission) {
+      const questionIds = submission.answers.map((a) =>
+        a.questionId.toString()
+      );
+
+      // Fetch all relevant questions
+      const questionsData = await Question.find({ _id: { $in: questionIds } });
+
+      // 🧠 Preserve original order as submitted
+      const orderedQuestions = questionIds
+        .map((qid) => questionsData.find((q) => q._id.toString() === qid))
+        .filter(Boolean); // remove any missing/null
+
       return res.status(200).json({
-        alreadySubmitted: true,
-        correctCount: existing.correctCount || 0,
-        message: "You already submitted today’s challenge!",
+        hasSubmitted: true,
+        correctCount: submission.correctCount,
+        answers: submission.answers,
+        questions: orderedQuestions, // includes correctAnswer
       });
     }
 
-    // Check if challenge exists
-    const daily = await DailyChallenge.findOne({ date: today });
-    if (!daily) return res.status(404).json({ message: "No daily challenge" });
+    return res.status(200).json({ hasSubmitted: false });
+  } catch (err) {
+    console.error("❌ Error checking submission status:", err);
+    return res.status(500).json({ message: "Failed to check status" });
+  }
+};
 
-    // Evaluate answers
-    let correctCount = 0;
+// Submit daily challenge
+const submitDailyChallenge = async (req, res) => {
+  try {
+    const { userId, answers, university, unit } = req.body;
+    const today = moment().format("YYYY-MM-DD");
 
-    for (const ans of answers) {
-      const question = await Question.findById(ans.questionId);
-      if (!question) continue;
+    // Prevent multiple submissions
+    const existing = await DailyChallengeSubmission.findOne({
+      userId,
+      university,
+      unit,
+      date: today,
+    });
 
-      if (question.answer === ans.selectedOption) correctCount++;
+    if (existing) {
+      return res.status(400).json({ message: "Already submitted today" });
     }
 
-    // Save participation
-    await Participation.create({
+    const questionIds = answers.map((a) => a.questionId);
+    const questions = await Question.find({ _id: { $in: questionIds } });
+
+    let correctCount = 0;
+    answers.forEach(({ questionId, selectedOption }) => {
+      const question = questions.find((q) => q._id.toString() === questionId);
+      if (question && question.answer === selectedOption) {
+        correctCount++;
+      }
+    });
+
+    await DailyChallengeSubmission.create({
       userId,
-      challengeDate: today,
-      answers, // storing full answer array is better than [BULK]
+      university,
+      unit,
+      date: today,
+      answers,
       correctCount,
     });
 
-    res.status(201).json({ message: "Submitted", correctCount });
+    return res.status(200).json({ correctCount });
   } catch (err) {
-    console.error("❌ Daily challenge submit failed:", err);
-    res.status(500).json({ message: "Failed to submit answer" });
+    console.error("❌ Submission failed:", err);
+    res.status(500).json({ message: "Challenge submission failed" });
   }
 };
-module.exports = { getDailyChallenge, submitDailyChallenge };
+
+module.exports = {
+  getDailyChallenge,
+  submitDailyChallenge,
+  getSubmissionStatus,
+};

@@ -1,15 +1,13 @@
 const express = require("express");
 const router = express.Router();
-
 const {
   getDailyChallenge,
+  getSubmissionStatus,
   submitDailyChallenge,
 } = require("../controllers/dailyChallengeController");
 
-// ✅ GET today's challenge
-router.get("/", getDailyChallenge); // /api/daily-challenge
-
-// ✅ POST answer to today's challenge
-router.post("/submit", submitDailyChallenge); // /api/daily-challenge/submit
+router.get("/", getDailyChallenge);
+router.get("/status", getSubmissionStatus);
+router.post("/submit", submitDailyChallenge);
 
 module.exports = router;

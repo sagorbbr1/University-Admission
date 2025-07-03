@@ -8,7 +8,6 @@ import RegisterPage from "./pages/RegisterPage/Register";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Leaderboard from "./pages/LeaderBoard/LeaderBoard";
 import Notice from "./pages/Notice/Notice";
-import DailyChallenge from "./pages/DailyChallenge/DailyChallenge";
 import MistakeBank from "./pages/MistakeBank/MistakeBank";
 import ResultAnalysis from "./pages/Result/ResultAnalysis";
 import ForumPage from "./pages/ForumPage/ForumPage";
@@ -32,8 +31,9 @@ import AllQuestions from "./pages/Admin/AllQuestions";
 import AllStudents from "./pages/Admin/AllStudents";
 import AdminNoticeManager from "./pages/Admin/AdminNoticeManager";
 import DiscussionDetail from "./pages/ForumPage/DiscussionDetail";
-import DailyChallengeSubmit from "./pages/Admin/DailyChallengeSubmit";
-
+import ChallengeUniversitySelect from "./pages/DailyChallenge/UniversitySelect";
+import ChallengeUnitSelect from "./pages/DailyChallenge/UnitSelect";
+import DailyChallenge from "./pages/DailyChallenge/DailyChallenge";
 function App() {
   return (
     <Router>
@@ -57,8 +57,20 @@ function App() {
           path="/leaderboard/:university/:unit"
           element={<Leaderboard />}
         />
+        //daily Challenge
+        <Route
+          path="/daily-challenge"
+          element={<ChallengeUniversitySelect />}
+        />
+        <Route
+          path="/daily-challenge/:university"
+          element={<ChallengeUnitSelect />}
+        />
+        <Route
+          path="/daily-challenge/:university/:unit"
+          element={<DailyChallenge />}
+        />
         <Route path="/notices" element={<Notice />} />
-        <Route path="/daily-challenge" element={<DailyChallenge />} />
         <Route path="/mistake-bank" element={<MistakeBank />} />
         <Route path="/results" element={<ResultAnalysis />} />
         <Route path="/forum" element={<ForumPage />} />
@@ -96,10 +108,6 @@ function App() {
               <AdminNoticeManager />
             </AdminRoute>
           }
-        />
-        <Route
-          path="/admin/daily-challenge-submissions"
-          element={<DailyChallengeSubmit />}
         />
       </Routes>
     </Router>
