@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useUser } from "../../context/UserContext";
 import { Menu, X } from "lucide-react";
 
 const features = [
@@ -15,8 +14,7 @@ const features = [
   { title: "👥 প্রোফাইল", link: "/profile" },
 ];
 
-const Sidebar = ({ isAdmin }) => {
-  const { logout } = useUser();
+const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -34,12 +32,6 @@ const Sidebar = ({ isAdmin }) => {
 
   const handleLinkClick = (link) => {
     navigate(link);
-    if (window.innerWidth < 768) setIsOpen(false);
-  };
-
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
     if (window.innerWidth < 768) setIsOpen(false);
   };
 
@@ -85,26 +77,6 @@ const Sidebar = ({ isAdmin }) => {
               </button>
             </li>
           ))}
-
-          <li className="mt-6">
-            <button
-              onClick={handleLogout}
-              className="w-full text-left px-3 py-2 rounded-lg bg-orange-400 text-white hover:bg-blue-700 transition font-bold shadow-md"
-            >
-              👤 Logout
-            </button>
-          </li>
-
-          {isAdmin && (
-            <li className="mt-6">
-              <button
-                onClick={() => handleLinkClick("/admin")}
-                className="w-full text-left px-3 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition font-bold shadow-md"
-              >
-                🔧 Admin Panel
-              </button>
-            </li>
-          )}
         </ul>
       </aside>
     </>

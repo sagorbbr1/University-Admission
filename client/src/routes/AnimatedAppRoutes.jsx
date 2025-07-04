@@ -38,8 +38,6 @@ import AllStudents from "../pages/Admin/AllStudents";
 import AdminRoute from "./AdminRoute";
 
 function AnimatedAppRoutes() {
-  const { user } = useUser();
-  const isAdmin = user?.role === "admin";
   const location = useLocation();
 
   return (
@@ -53,7 +51,7 @@ function AnimatedAppRoutes() {
         <Route path="*" element={<NotFound />} />
 
         {/* Main Layout Routes */}
-        <Route element={<DashboardLayout isAdmin={isAdmin} />}>
+        <Route element={<DashboardLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/mock" element={<MockUniversitySelect />} />
           <Route path="/mock/unit/:university" element={<MockUnitSelect />} />

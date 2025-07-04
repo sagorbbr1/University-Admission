@@ -8,6 +8,7 @@ import {
   FaClipboardList,
   FaChartBar,
   FaFireAlt,
+  FaTools,
 } from "react-icons/fa";
 
 const Dashboard = () => {
@@ -84,6 +85,19 @@ const Dashboard = () => {
           </button>
         </div>
       </div>
+
+      {/* Admin Panel Button for admins */}
+      {user?.role === "admin" && (
+        <div className="mb-8">
+          <button
+            onClick={() => navigate("/admin")}
+            className="flex items-center gap-2 bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 shadow-lg font-semibold transition"
+          >
+            <FaTools size={22} />
+            Admin Panel
+          </button>
+        </div>
+      )}
 
       {/* Quick Access Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">

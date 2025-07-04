@@ -1,114 +1,208 @@
 import React, { useState, useEffect } from "react";
-import api from "../../utils/api";
+import { useUser } from "../../context/UserContext.jsx";
 
 const Profile = () => {
-  const [user, setUser] = useState({});
-  const [editMode, setEditMode] = useState(false);
-  const [form, setForm] = useState({ name: "", email: "", photo: "" });
+  const { user, updateUser } = useUser();
+
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    collegeName: "",
+    district: "",
+    role: "",
+  });
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      const res = await api.get("/user/profile");
-      if (res.ok) {
-        setUser(res.data);
-        setForm({
-          name: res.data.name,
-          email: res.data.email,
-          photo: res.data.photo,
-        });
-      }
-    };
-    fetchProfile();
-  }, []);
+    if (user) {
+      setForm({
+        name: user.name || "",
+        email: user.email || "",
+        phone: user.phone || "",
+        collegeName: user.collegeName || "",
+        district: user.district || "",
+        role: user.role || "student",
+      });
+    }
+  }, [user]);
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSave = async () => {
-    const res = await api.put("/user/profile", form);
-    if (res.ok) {
-      setUser(res.data);
-      setEditMode(false);
+  const validatePhone = (phone) => {
+    if (!phone) return true;
+    return /^01[3-9]\d{8}$/.test(phone);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    if (!form.name.trim()) {
+      setError("নাম অবশ্যই দিতে হবে।");
+      return;
+    }
+
+    if (!validatePhone(form.phone)) {
+      setError("সঠিক ফোন নম্বর দিন (যেমন: 017XXXXXXXX)।");
+      return;
+    }
+
+    try {
+      await updateUser(form);
+      setIsEditing(false);
+    } catch (err) {
+      setError("আপডেট করতে সমস্যা হয়েছে, পরে চেষ্টা করুন।");
     }
   };
 
+  if (!user) {
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center text-gray-600 dark:text-gray-300">
+        Loading profile...
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-900 via-cyan-800 to-blue-950 text-white flex items-center justify-center p-4">
-      <div className="bg-white/10 rounded-3xl shadow-2xl p-8 w-full max-w-md backdrop-blur-lg border border-cyan-300/20">
-        <div className="text-center">
-          <img
-            src={form.photo || "/default-avatar.png"}
-            alt="Profile"
-            className="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-cyan-400/60 shadow-md"
-          />
-          {editMode && (
-            <input
-              type="text"
-              name="photo"
-              value={form.photo}
-              onChange={handleChange}
-              placeholder="Image URL"
-              className="w-full bg-transparent border-b border-cyan-400 text-center py-1 mb-4 focus:outline-none placeholder-white/70"
-            />
-          )}
-        </div>
+    <div
+      className="
+        min-h-screen flex justify-center items-start
+        bg-gradient-to-br from-green-200 via-blue-300 to-purple-400
+        dark:from-green-900 dark:via-blue-900 dark:to-purple-900
+        py-12 px-6
+      "
+    >
+      <div
+        className="
+          w-full max-w-4xl
+          bg-white/30 dark:bg-gray-900/40
+          backdrop-blur-xl
+          rounded-3xl
+          shadow-2xl
+          border border-white/30 dark:border-gray-700/50
+          p-12
+          text-gray-900 dark:text-white
+          overflow-hidden
+        "
+      >
+        <h2 className="text-5xl font-extrabold mb-12 text-center tracking-wide">
+          প্রোফাইল তথ্য
+        </h2>
 
-        <div className="space-y-4">
-          {editMode ? (
-            <input
-              type="text"
-              name="name"
-              value={form.name}
-              onChange={handleChange}
-              placeholder="Name"
-              className="w-full bg-transparent border-b border-cyan-400 py-1 focus:outline-none placeholder-white/70"
-            />
-          ) : (
-            <h2 className="text-2xl font-semibold text-center">
-              👤 {user.name}
-            </h2>
-          )}
+        {error && (
+          <p className="mb-8 text-red-600 dark:text-red-400 font-semibold text-center">
+            {error}
+          </p>
+        )}
 
-          {editMode ? (
-            <input
-              type="email"
-              name="email"
-              value={form.email}
-              onChange={handleChange}
-              placeholder="Email"
-              className="w-full bg-transparent border-b border-cyan-400 py-1 focus:outline-none placeholder-white/70"
-            />
-          ) : (
-            <p className="text-center text-cyan-100">📧 {user.email}</p>
-          )}
-        </div>
-
-        <div className="mt-6 text-center">
-          {editMode ? (
-            <>
-              <button
-                onClick={handleSave}
-                className="bg-cyan-600 hover:bg-cyan-700 px-4 py-2 rounded-xl text-sm font-semibold mr-3 shadow-md"
-              >
-                💾 Save
-              </button>
-              <button
-                onClick={() => setEditMode(false)}
-                className="bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded-xl text-sm font-semibold shadow-md"
-              >
-                ❌ Cancel
-              </button>
-            </>
-          ) : (
-            <button
-              onClick={() => setEditMode(true)}
-              className="bg-cyan-500 hover:bg-cyan-600 px-5 py-2 rounded-xl text-sm font-semibold shadow-md"
+        <form onSubmit={handleSubmit} className="space-y-10">
+          {[
+            {
+              label: "নাম",
+              name: "name",
+              type: "text",
+              placeholder: "আপনার পূর্ণ নাম লিখুন",
+            },
+            {
+              label: "ইমেইল (পরিবর্তনযোগ্য নয়)",
+              name: "email",
+              type: "email",
+              disabled: true,
+            },
+            {
+              label: "ফোন নম্বর",
+              name: "phone",
+              type: "text",
+              placeholder: "017XXXXXXXX",
+            },
+            {
+              label: "কলেজের নাম",
+              name: "collegeName",
+              type: "text",
+              placeholder: "আপনার কলেজের নাম",
+            },
+            {
+              label: "জেলা",
+              name: "district",
+              type: "text",
+              placeholder: "আপনার জেলা",
+            },
+            { label: "ভূমিকা", name: "role", type: "text", disabled: true },
+          ].map(({ label, name, type, placeholder, disabled }) => (
+            <div
+              key={name}
+              className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 items-center"
             >
-              ✏️ Edit Profile
-            </button>
-          )}
-        </div>
+              <label
+                htmlFor={name}
+                className="text-lg font-semibold text-gray-800 dark:text-gray-300 mb-1 md:mb-0"
+              >
+                {label}
+              </label>
+              <input
+                id={name}
+                name={name}
+                type={type}
+                value={form[name]}
+                onChange={handleChange}
+                placeholder={placeholder}
+                disabled={disabled || !isEditing}
+                className={`col-span-1 md:col-span-2 rounded-2xl px-5 py-4 text-xl
+                  focus:outline-none
+                  ${
+                    disabled || !isEditing
+                      ? "bg-gray-100 dark:bg-gray-700 border border-gray-300 cursor-not-allowed text-gray-500 dark:text-gray-400"
+                      : "bg-white dark:bg-gray-800 border-2 border-indigo-500 focus:ring-2 focus:ring-indigo-400"
+                  }
+                `}
+              />
+            </div>
+          ))}
+
+          <div className="flex justify-center gap-10 mt-12 flex-wrap">
+            {!isEditing ? (
+              <button
+                type="button"
+                onClick={() => setIsEditing(true)}
+                className="px-16 py-4 rounded-3xl bg-indigo-600 text-white text-2xl font-semibold hover:bg-indigo-700 transition"
+              >
+                Edit Profile
+              </button>
+            ) : (
+              <>
+                <button
+                  type="submit"
+                  className="px-16 py-4 rounded-3xl bg-green-600 text-white text-2xl font-semibold hover:bg-green-700 transition"
+                >
+                  Save Changes
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setForm({
+                      name: user.name || "",
+                      email: user.email || "",
+                      phone: user.phone || "",
+                      collegeName: user.collegeName || "",
+                      district: user.district || "",
+                      role: user.role || "student",
+                    });
+                    setError("");
+                    setIsEditing(false);
+                  }}
+                  className="px-16 py-4 rounded-3xl bg-gray-400 text-white text-2xl font-semibold hover:bg-gray-500 transition"
+                >
+                  Cancel
+                </button>
+              </>
+            )}
+          </div>
+        </form>
       </div>
     </div>
   );
