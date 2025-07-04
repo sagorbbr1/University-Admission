@@ -69,14 +69,37 @@ const login = async (req, res) => {
   }
 };
 const getProfile = async (req, res) => {
-  console.log(req.user);
   try {
     const user = await User.findById(req.user.id).select("-password");
     if (!user) return res.status(404).json({ error: "User not found" });
-
     res.status(200).json(user);
   } catch (err) {
     console.error("❌ Profile fetch error:", err.message);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+const updateProfile = async (req, res) => {
+  try {
+    const { name, phone, collegeName, district } = req.body;
+
+    if (!name || !name.trim()) {
+      return res.status(400).json({ error: "Name is required" });
+    }
+
+    if (phone && !/^01[3-9]\d{8}$/.test(phone)) {
+      return res.status(400).json({ error: "Invalid phone number" });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user.id,
+      { name, phone, collegeName, district },
+      { new: true, runValidators: true }
+    ).select("-password");
+
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    console.error("❌ Profile update error:", err.message);
     res.status(500).json({ error: "Server error" });
   }
 };
@@ -85,4 +108,5 @@ module.exports = {
   register,
   login,
   getProfile,
+  updateProfile,
 };

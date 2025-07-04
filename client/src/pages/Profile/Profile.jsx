@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
+
 import { useUser } from "../../context/UserContext.jsx";
+import api from "../../utils/api.js";
 
 const Profile = () => {
-  const { user, updateUser } = useUser();
+  const { user, token, logout, login } = useUser();
 
   const [form, setForm] = useState({
     name: "",
@@ -15,29 +17,54 @@ const Profile = () => {
 
   const [isEditing, setIsEditing] = useState(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
 
+  // Fetch profile from backend
   useEffect(() => {
-    if (user) {
-      setForm({
-        name: user.name || "",
-        email: user.email || "",
-        phone: user.phone || "",
-        collegeName: user.collegeName || "",
-        district: user.district || "",
-        role: user.role || "student",
-      });
-    }
-  }, [user]);
+    if (!token) return;
 
+    const fetchProfile = async () => {
+      setLoading(true);
+      setError("");
+      try {
+        const res = await api.get(`/auth/user/profile`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setForm({
+          name: res.data.name || "",
+          email: res.data.email || "",
+          phone: res.data.phone || "",
+          collegeName: res.data.collegeName || "",
+          district: res.data.district || "",
+          role: res.data.role || "student",
+        });
+        setLoading(false);
+      } catch (err) {
+        setLoading(false);
+        setError(
+          err.response?.data?.error || "প্রোফাইল তথ্য লোড করতে সমস্যা হয়েছে।"
+        );
+        if (err.response?.status === 401) {
+          logout(); // token invalid, force logout
+        }
+      }
+    };
+
+    fetchProfile();
+  }, [token, logout]);
+
+  // Handle input change
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
+  // Phone validation (Bangladesh)
   const validatePhone = (phone) => {
     if (!phone) return true;
     return /^01[3-9]\d{8}$/.test(phone);
   };
 
+  // Update user profile backend call
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -46,24 +73,41 @@ const Profile = () => {
       setError("নাম অবশ্যই দিতে হবে।");
       return;
     }
-
     if (!validatePhone(form.phone)) {
       setError("সঠিক ফোন নম্বর দিন (যেমন: 017XXXXXXXX)।");
       return;
     }
 
     try {
-      await updateUser(form);
+      const res = await api.put(
+        `/auth/user/profile`,
+        {
+          name: form.name,
+          phone: form.phone,
+          collegeName: form.collegeName,
+          district: form.district,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      // Update context user data too for instant sync
+      login({ ...user, ...res.data, token });
+
       setIsEditing(false);
     } catch (err) {
-      setError("আপডেট করতে সমস্যা হয়েছে, পরে চেষ্টা করুন।");
+      setError(
+        err.response?.data?.error ||
+          "আপডেট করতে সমস্যা হয়েছে, পরে চেষ্টা করুন।"
+      );
     }
   };
 
-  if (!user) {
+  if (loading) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center text-gray-600 dark:text-gray-300">
-        Loading profile...
+        প্রোফাইল তথ্য লোড হচ্ছে...
       </div>
     );
   }
