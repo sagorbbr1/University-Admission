@@ -8,7 +8,16 @@ const DashboardLayout = () => {
     <div className="flex min-h-screen overflow-hidden">
       <Sidebar />
 
-      <main className="flex-1 bg-gray-50 dark:bg-gray-900 p-4 transition-all duration-300 ease-in-out">
+      <main
+        className="
+          flex-1
+          min-h-screen
+          bg-gray-50 dark:bg-gray-900
+          p-4
+          overflow-auto
+          transition-all duration-300 ease-in-out
+        "
+      >
         <PageWrapper>
           <Outlet />
         </PageWrapper>

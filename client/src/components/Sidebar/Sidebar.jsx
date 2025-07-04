@@ -48,13 +48,16 @@ const Sidebar = () => {
 
       {/* Sidebar */}
       <aside
-        className={`fixed md:static top-0 left-0 z-40 h-screen w-[250px] p-5
+        className={`fixed md:static top-0 left-0 z-40
+          w-[250px] p-5
           bg-gradient-to-b from-green-200 via-blue-300 to-purple-400/80
           dark:from-green-900 dark:via-blue-900 dark:to-purple-900/80
           border-r border-white/30 dark:border-gray-700
           shadow-2xl backdrop-blur-xl
           transition-transform duration-500 ease-in-out will-change-transform
-          ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
+          ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
+          min-h-screen
+        `}
       >
         <div className="mb-10">
           <h1 className="text-xl font-bold text-indigo-800 dark:text-indigo-300 drop-shadow-md">
