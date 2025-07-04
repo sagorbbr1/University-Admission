@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../utils/api.js";
 import { useUser } from "../../context/UserContext.jsx";
+import logo from "../../assets/logo.svg"; // ✅ Logo import
 
 export default function RegisterPage() {
   const { login } = useUser();
@@ -49,12 +50,18 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-100 via-blue-200 to-purple-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-all duration-500">
       <div className="bg-white/30 dark:bg-white/10 backdrop-blur-md p-8 rounded-2xl shadow-2xl max-w-sm w-full">
+        {/* 🔥 Logo here */}
+        <img
+          src={logo}
+          alt="Admission Mate"
+          className="h-16 md:h-20 mx-auto mb-4 object-contain"
+        />
+
         <h2 className="text-3xl font-bold text-center text-gray-800 dark:text-white mb-6">
-          Create an Account ✨
+          Create an Account
         </h2>
 
         <form className="space-y-4" onSubmit={handleSubmit}>
-          {/* Name */}
           <Input
             label="Full Name"
             name="name"
@@ -62,8 +69,6 @@ export default function RegisterPage() {
             onChange={handleChange}
             placeholder="John Doe"
           />
-
-          {/* Email */}
           <Input
             label="Email"
             name="email"
@@ -72,8 +77,6 @@ export default function RegisterPage() {
             onChange={handleChange}
             placeholder="you@example.com"
           />
-
-          {/* Phone */}
           <Input
             label="Phone Number"
             name="phone"
@@ -81,8 +84,6 @@ export default function RegisterPage() {
             onChange={handleChange}
             placeholder="01XXXXXXXXX"
           />
-
-          {/* College Name */}
           <Input
             label="College Name"
             name="collegeName"
@@ -90,8 +91,6 @@ export default function RegisterPage() {
             onChange={handleChange}
             placeholder="Dhaka College"
           />
-
-          {/* District */}
           <Input
             label="District"
             name="district"
@@ -99,8 +98,6 @@ export default function RegisterPage() {
             onChange={handleChange}
             placeholder="Dhaka"
           />
-
-          {/* Password */}
           <Input
             label="Password"
             name="password"
@@ -110,26 +107,23 @@ export default function RegisterPage() {
             placeholder="••••••••"
           />
 
-          {/* Error */}
           {error && (
             <div className="text-red-500 text-sm font-medium">{error}</div>
           )}
 
-          {/* Submit */}
           <button
             type="submit"
-            className="w-full py-2 px-4 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition duration-300"
+            className="w-full py-2 px-4 bg-gradient-to-r from-purple-500 to-purple-700 hover:from-purple-600 hover:to-purple-800 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition duration-300"
           >
             Sign Up
           </button>
         </form>
 
-        {/* Redirect */}
         <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-4">
           Already have an account?{" "}
           <span
             onClick={() => navigate("/login")}
-            className="text-green-500 hover:underline cursor-pointer"
+            className="text-purple-500 hover:underline cursor-pointer"
           >
             Sign in
           </span>

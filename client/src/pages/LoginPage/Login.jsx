@@ -3,10 +3,13 @@ import { useNavigate } from "react-router-dom";
 import api from "../../utils/api.js";
 import { useUser } from "../../context/UserContext.jsx";
 
+// 🔥 Import your logo
+import logo from "../../assets/logo.svg";
+
 export default function LoginPage() {
   const { login } = useUser();
-
   const navigate = useNavigate();
+
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -26,8 +29,6 @@ export default function LoginPage() {
       const response = await api.post("/auth/login", form);
       const { status, data } = response;
 
-      console.log("🌐 Login Response:", response);
-
       if (status !== 200 || !data?.token) {
         setError(data?.message || "Login failed.");
         return;
@@ -44,8 +45,15 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#e0f7fa] via-[#e1bee7] to-[#f3e5f5] dark:from-[#0f0f0f] dark:via-[#1f1f1f] dark:to-[#121212] transition-all duration-700">
       <div className="bg-white/20 dark:bg-white/10 backdrop-blur-lg border border-white/30 dark:border-white/10 rounded-3xl shadow-[0_8px_32px_0_rgba(31,38,135,0.37)] p-10 max-w-md w-full">
+        {/* Logo */}
+        <img
+          src={logo}
+          alt="Admission Mate"
+          className="h-16 md:h-20 mx-auto mb-4 object-contain"
+        />
+
         <h2 className="text-4xl font-bold text-center text-gray-800 dark:text-white mb-8 drop-shadow-md">
-          Welcome Back 🚀
+          Welcome Back
         </h2>
 
         <form className="space-y-6" onSubmit={handleSubmit}>
@@ -89,7 +97,7 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            className="w-full py-3 px-6 bg-gradient-to-r from-green-500 to-green-700 hover:from-green-600 hover:to-green-800 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out"
+            className="w-full py-3 px-6 bg-gradient-to-r from-purple-500 to-purple-700 hover:from-purple-600 hover:to-purple-800 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out"
           >
             Sign In
           </button>
@@ -99,7 +107,7 @@ export default function LoginPage() {
           Don’t have an account?{" "}
           <span
             onClick={() => navigate("/register")}
-            className="text-green-500 hover:underline cursor-pointer"
+            className="text-purple-500 hover:underline cursor-pointer"
           >
             Sign up
           </span>

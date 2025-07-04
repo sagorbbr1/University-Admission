@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import logo from "../../assets/logo.svg"; // Adjust the path as necessary
 
 const statsData = [
   { label: "মোট ব্যবহারকারী", value: 14235, icon: "👥" },
@@ -47,93 +48,103 @@ const AnimatedCounter = ({ value }) => {
 
 const Home = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-tr from-[#141e30] to-[#243b55] text-white flex flex-col font-sans">
-      <header className="sticky top-0 z-50 bg-[#1c2b36]/90 backdrop-blur border-b border-blue-600 px-8 py-5 flex justify-between items-center shadow">
-        <h1 className="text-3xl font-extrabold tracking-wide text-blue-400 drop-shadow-md">
-          🎓 Admission Mate
-        </h1>
-        <nav className="space-x-6 font-semibold text-white/90 text-lg">
-          {["/", "/dashboard", "/login", "/register"].map((path, i) => {
-            const names = ["হোম", "ড্যাশবোর্ড", "লগইন", "রেজিস্টার"];
-            return (
-              <Link
-                key={i}
-                to={path}
-                className="hover:text-blue-300 transition hover:underline underline-offset-4"
-              >
-                {names[i]}
-              </Link>
-            );
-          })}
+    <div className="min-h-screen flex flex-col font-sans text-white bg-gradient-to-br from-[#e0f7fa] via-[#e1bee7] to-[#f3e5f5] dark:from-[#0f172a] dark:via-[#1e293b] dark:to-[#334155]">
+      {/* Header */}
+      <header className="sticky top-0 z-50 bg-white/30 backdrop-blur-md border-b border-purple-300 px-6 py-3 flex items-center justify-between shadow-md">
+        <img
+          src={logo}
+          alt="Admission Mate"
+          className="h-16 md:h-20 max-h-20 object-contain"
+        />
+        <nav className="space-x-4 text-sm md:text-base font-semibold text-purple-700 dark:text-purple-200">
+          <Link to="/" className="hover:text-purple-500 transition">
+            হোম
+          </Link>
+          <Link to="/dashboard" className="hover:text-purple-500 transition">
+            ড্যাশবোর্ড
+          </Link>
+          <Link to="/login" className="hover:text-purple-500 transition">
+            লগইন
+          </Link>
+          <Link to="/register" className="hover:text-purple-500 transition">
+            রেজিস্টার
+          </Link>
         </nav>
       </header>
 
+      {/* Hero */}
       <section className="flex-1 flex flex-col justify-center items-center text-center px-6 py-24">
-        <h2 className="text-5xl py-3 md:text-6xl font-extrabold bg-gradient-to-br from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent drop-shadow-lg animate-pulse">
+        <h2 className="text-5xl py-3 md:text-6xl font-extrabold bg-gradient-to-br from-purple-500 via-pink-400 to-blue-500 bg-clip-text text-transparent drop-shadow-lg animate-pulse">
           ভর্তি প্রস্তুতির সম্পূর্ণ সমাধান
         </h2>
-        <p className="text-white/90 mt-6 text-xl md:text-2xl font-medium leading-relaxed max-w-3xl">
+        <p className="text-gray-800 dark:text-white/90 mt-6 text-xl md:text-2xl font-medium leading-relaxed max-w-3xl">
           Admission Mate নিয়ে আয়, তোমার মক টেস্ট, প্রশ্ন ব্যাংক, রেজাল্ট
           বিশ্লেষণ ও ডেইলি চ্যালেঞ্জ সব এক জায়গায়। প্রস্তুত হও তোমার স্বপ্নের
           বিশ্ববিদ্যালয়ের জন্য, আজ থেকেই!
         </p>
         <Link
           to="/register"
-          className="mt-10 bg-blue-600 hover:bg-blue-700 text-white font-bold px-10 py-4 rounded-full shadow-md hover:scale-105 transition"
+          className="mt-10 bg-purple-600 hover:bg-purple-700 text-white font-bold px-10 py-4 rounded-full shadow-md hover:scale-105 transition"
         >
           শুরু করো এখনি
         </Link>
       </section>
 
+      {/* Stats */}
       <section className="max-w-6xl mx-auto px-6 py-12 grid grid-cols-2 md:grid-cols-4 gap-6">
         {statsData.map(({ label, value, icon }, i) => (
           <div
             key={i}
-            className="bg-[#1e2a38]/60 backdrop-blur border border-blue-300/20 rounded-2xl p-8 text-center shadow hover:shadow-xl hover:scale-105 transition"
+            className="bg-white/30 dark:bg-white/10 backdrop-blur-md border border-white/40 dark:border-gray-700 rounded-2xl p-8 text-center shadow-lg hover:shadow-purple-300 hover:scale-105 transition"
           >
             <div className="text-5xl mb-2">{icon}</div>
-            <div className="text-3xl font-bold text-blue-300">
+            <div className="text-3xl font-bold text-purple-700 dark:text-purple-300">
               <AnimatedCounter value={value} />
             </div>
-            <div className="text-white/80 text-lg font-medium mt-1">
+            <div className="text-gray-800 dark:text-white/80 text-lg font-medium mt-1">
               {label}
             </div>
           </div>
         ))}
       </section>
 
+      {/* Features */}
       <section className="max-w-7xl mx-auto px-6 py-20 grid gap-10 sm:grid-cols-2 md:grid-cols-4">
         {features.map((f, i) => (
           <div
             key={i}
-            className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-6 text-center shadow-md hover:shadow-blue-400 hover:border-blue-300 transition-transform hover:scale-105"
+            className="bg-white/30 dark:bg-white/10 backdrop-blur-md border border-white/40 dark:border-gray-700 rounded-2xl p-6 text-center shadow-lg hover:shadow-purple-300 hover:scale-105 transition-transform"
           >
-            <h3 className="text-blue-300 text-2xl font-bold mb-3">
+            <h3 className="text-purple-700 dark:text-purple-300 text-2xl font-bold mb-3">
               {f.icon} {f.title}
             </h3>
-            <p className="text-white/80 text-base font-medium">{f.desc}</p>
+            <p className="text-gray-800 dark:text-white/80 text-base font-medium">
+              {f.desc}
+            </p>
           </div>
         ))}
       </section>
 
-      <section className="bg-blue-800/20 border-t border-b border-blue-600 py-10">
-        <p className="text-center text-xl italic font-semibold text-blue-200">
+      {/* Quote */}
+      <section className="bg-white/20 dark:bg-white/10 border-t border-b border-purple-400 dark:border-purple-800 py-10 backdrop-blur text-center">
+        <p className="text-xl italic font-semibold text-purple-800 dark:text-purple-200">
           “সফলতা পেতে হলে আজই শুরু করতে হবে, সময় তোমার প্রতিদ্বন্দ্বী নয়, বন্ধু
           হতে হবে।” — Admission Mate
         </p>
       </section>
 
-      <footer className="text-white/70 py-6 text-center border-t border-blue-800 bg-black/40 backdrop-blur">
+      {/* Footer */}
+      <footer className="text-gray-700 dark:text-white/70 py-6 text-center border-t border-purple-300 dark:border-purple-800 bg-white/30 dark:bg-black/30 backdrop-blur">
         <div>
           © {new Date().getFullYear()} Admission Mate | Developed by Sagor Boss
           🚀
         </div>
-        <div className="flex justify-center gap-6 text-blue-400 text-xl mt-4">
+        <div className="flex justify-center gap-6 text-purple-500 dark:text-purple-300 text-xl mt-4">
           <a
             href="https://twitter.com/sagorboss"
             target="_blank"
             rel="noreferrer"
-            className="hover:text-blue-300"
+            className="hover:text-purple-400"
           >
             🐦
           </a>
@@ -141,7 +152,7 @@ const Home = () => {
             href="https://github.com/sagorboss"
             target="_blank"
             rel="noreferrer"
-            className="hover:text-gray-300"
+            className="hover:text-purple-600"
           >
             💻
           </a>
@@ -149,7 +160,7 @@ const Home = () => {
             href="https://linkedin.com/in/sagorboss"
             target="_blank"
             rel="noreferrer"
-            className="hover:text-blue-500"
+            className="hover:text-purple-400"
           >
             🔗
           </a>

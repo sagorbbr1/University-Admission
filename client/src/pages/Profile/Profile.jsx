@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
-import api from "../../utils/api.js"; // your custom axios/fetch wrapper
+import api from "../../utils/api.js";
 import { useUser } from "../../context/UserContext.jsx";
+import Spinner from "../../components/Spninner/Spinner.jsx";
+import NotLoggedInPrompt from "../../components/NotLoggedInPrompt/NotLoggedInPrompt.jsx";
 
 const Profile = () => {
   const { user, token, logout, login } = useUser();
@@ -18,7 +20,6 @@ const Profile = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
-  // Load profile from backend
   useEffect(() => {
     if (!token) return;
 
@@ -53,18 +54,15 @@ const Profile = () => {
     fetchProfile();
   }, [token, logout]);
 
-  // Handle input changes
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  // Bangladeshi phone validation
   const validatePhone = (phone) => {
     if (!phone) return true;
     return /^01[3-9]\d{8}$/.test(phone);
   };
 
-  // Update profile submit handler
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -93,9 +91,7 @@ const Profile = () => {
         }
       );
 
-      // Update context user & token for instant UI sync
       login({ ...user, ...res.data, token });
-
       setIsEditing(false);
     } catch (err) {
       setError(
@@ -105,36 +101,26 @@ const Profile = () => {
     }
   };
 
+  // If user not logged in, show fallback with full layout
+  if (!user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-200 via-blue-300 to-purple-400 dark:from-green-900 dark:via-blue-900 dark:to-purple-900 text-white">
+        <NotLoggedInPrompt />
+      </div>
+    );
+  }
+
   if (loading) {
     return (
-      <div className="min-h-[60vh] flex items-center justify-center text-gray-600 dark:text-gray-300">
-        প্রোফাইল তথ্য লোড হচ্ছে...
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-200 via-blue-300 to-purple-400 dark:from-green-900 dark:via-blue-900 dark:to-purple-900 text-gray-800 dark:text-white">
+        <Spinner />
       </div>
     );
   }
 
   return (
-    <div
-      className="
-        min-h-screen flex justify-center items-start
-        bg-gradient-to-br from-green-200 via-blue-300 to-purple-400
-        dark:from-green-900 dark:via-blue-900 dark:to-purple-900
-        py-12 px-6
-      "
-    >
-      <div
-        className="
-          w-full max-w-4xl
-          bg-white/30 dark:bg-gray-900/40
-          backdrop-blur-xl
-          rounded-3xl
-          shadow-2xl
-          border border-white/30 dark:border-gray-700/50
-          p-12
-          text-gray-900 dark:text-white
-          overflow-hidden
-        "
-      >
+    <div className="min-h-screen flex justify-center items-start bg-gradient-to-br from-green-200 via-blue-300 to-purple-400 dark:from-green-900 dark:via-blue-900 dark:to-purple-900 py-12 px-6">
+      <div className="w-full max-w-4xl bg-white/30 dark:bg-gray-900/40 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/30 dark:border-gray-700/50 p-12 text-gray-900 dark:text-white overflow-hidden">
         <h2 className="text-5xl font-extrabold mb-12 text-center tracking-wide">
           প্রোফাইল তথ্য
         </h2>
@@ -213,10 +199,7 @@ const Profile = () => {
             {!isEditing ? (
               <button
                 type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setIsEditing(true);
-                }}
+                onClick={() => setIsEditing(true)}
                 className="px-16 py-4 rounded-3xl bg-indigo-600 text-white text-2xl font-semibold hover:bg-indigo-700 transition"
               >
                 Edit Profile
@@ -231,8 +214,7 @@ const Profile = () => {
                 </button>
                 <button
                   type="button"
-                  onClick={(e) => {
-                    e.preventDefault();
+                  onClick={() => {
                     setForm({
                       name: user.name || "",
                       email: user.email || "",

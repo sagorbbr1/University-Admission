@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react";
+import { useUser } from "../../context/UserContext";
+import logo from "../../assets/logo.svg";
 
 const features = [
   { title: "📊 Dashboard", link: "/dashboard" },
@@ -15,6 +17,7 @@ const features = [
 ];
 
 const Sidebar = () => {
+  const { logout, user } = useUser();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -40,10 +43,10 @@ const Sidebar = () => {
       {/* Toggle Button */}
       <button
         onClick={toggleSidebar}
-        className="md:hidden fixed top-4 left-4 z-50 bg-indigo-600 text-white p-2 rounded-lg shadow-md"
+        className="md:hidden fixed top-4 left-4 z-50 bg-purple-500 text-white p-2 rounded-lg shadow-md"
         aria-label={isOpen ? "Close sidebar" : "Open sidebar"}
       >
-        {isOpen ? <X size={22} /> : <Menu size={22} />}
+        {isOpen ? <X size={24} /> : <Menu size={24} />}
       </button>
 
       {/* Sidebar */}
@@ -59,20 +62,24 @@ const Sidebar = () => {
           min-h-screen
         `}
       >
-        <div className="mb-10">
-          <h1 className="text-xl font-bold text-indigo-800 dark:text-indigo-300 drop-shadow-md">
-            🎓 AdmissionApp
-          </h1>
+        <div className="flex items-center justify-center mt-10 md:mt-0">
+          <div className="text-center">
+            <img
+              src={logo}
+              alt="Admission Mate"
+              className="h-20 md:h-20 object-contain mx-auto drop-shadow-lg"
+            />
+          </div>
         </div>
 
-        <ul className="space-y-4">
+        <ul className="space-y-3 md:space-y-2">
           {features.map(({ title, link }) => (
             <li key={link}>
               <button
                 onClick={() => handleLinkClick(link)}
                 className={`w-full text-left block px-3 py-2 rounded-lg font-medium transition-all duration-300 ${
                   location.pathname.startsWith(link)
-                    ? "bg-indigo-600 text-white shadow-md"
+                    ? "bg-purple-600 text-white shadow-md"
                     : "hover:bg-white/40 dark:hover:bg-white/10 hover:text-indigo-900 dark:hover:text-white"
                 }`}
               >
@@ -80,6 +87,19 @@ const Sidebar = () => {
               </button>
             </li>
           ))}
+          <li>
+            {user && (
+              <button
+                onClick={() => {
+                  logout();
+                  navigate("/login");
+                }}
+                className="w-full text-left block px-3 py-2 rounded-lg font-medium text-red-600 hover:bg-red-100 dark:hover:bg-red-800 transition-all duration-300"
+              >
+                🚪 লগআউট
+              </button>
+            )}
+          </li>
         </ul>
       </aside>
     </>
