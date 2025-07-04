@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-
+import api from "../../utils/api.js"; // your custom axios/fetch wrapper
 import { useUser } from "../../context/UserContext.jsx";
-import api from "../../utils/api.js";
 
 const Profile = () => {
   const { user, token, logout, login } = useUser();
@@ -19,7 +18,7 @@ const Profile = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
-  // Fetch profile from backend
+  // Load profile from backend
   useEffect(() => {
     if (!token) return;
 
@@ -27,9 +26,10 @@ const Profile = () => {
       setLoading(true);
       setError("");
       try {
-        const res = await api.get(`/auth/user/profile`, {
+        const res = await api.get("/auth/user/profile", {
           headers: { Authorization: `Bearer ${token}` },
         });
+
         setForm({
           name: res.data.name || "",
           email: res.data.email || "",
@@ -45,7 +45,7 @@ const Profile = () => {
           err.response?.data?.error || "প্রোফাইল তথ্য লোড করতে সমস্যা হয়েছে।"
         );
         if (err.response?.status === 401) {
-          logout(); // token invalid, force logout
+          logout();
         }
       }
     };
@@ -53,18 +53,18 @@ const Profile = () => {
     fetchProfile();
   }, [token, logout]);
 
-  // Handle input change
+  // Handle input changes
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  // Phone validation (Bangladesh)
+  // Bangladeshi phone validation
   const validatePhone = (phone) => {
     if (!phone) return true;
     return /^01[3-9]\d{8}$/.test(phone);
   };
 
-  // Update user profile backend call
+  // Update profile submit handler
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -73,6 +73,7 @@ const Profile = () => {
       setError("নাম অবশ্যই দিতে হবে।");
       return;
     }
+
     if (!validatePhone(form.phone)) {
       setError("সঠিক ফোন নম্বর দিন (যেমন: 017XXXXXXXX)।");
       return;
@@ -80,7 +81,7 @@ const Profile = () => {
 
     try {
       const res = await api.put(
-        `/auth/user/profile`,
+        "/auth/user/profile",
         {
           name: form.name,
           phone: form.phone,
@@ -92,7 +93,7 @@ const Profile = () => {
         }
       );
 
-      // Update context user data too for instant sync
+      // Update context user & token for instant UI sync
       login({ ...user, ...res.data, token });
 
       setIsEditing(false);
@@ -212,7 +213,10 @@ const Profile = () => {
             {!isEditing ? (
               <button
                 type="button"
-                onClick={() => setIsEditing(true)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsEditing(true);
+                }}
                 className="px-16 py-4 rounded-3xl bg-indigo-600 text-white text-2xl font-semibold hover:bg-indigo-700 transition"
               >
                 Edit Profile
@@ -227,7 +231,8 @@ const Profile = () => {
                 </button>
                 <button
                   type="button"
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.preventDefault();
                     setForm({
                       name: user.name || "",
                       email: user.email || "",

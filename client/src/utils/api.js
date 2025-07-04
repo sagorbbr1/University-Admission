@@ -1,8 +1,5 @@
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-console.log("🌐 API Base URL:", BASE_URL);
-
-// ✅ Safely get token from localStorage.user.token
 const getToken = () => {
   try {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -36,7 +33,6 @@ const handleResponse = async (res) => {
 
 const api = {
   get: async (endpoint) => {
-    console.log("🔍 Fetching:", `${BASE_URL}${endpoint}`);
     const res = await fetch(`${BASE_URL}${endpoint}`, {
       method: "GET",
       headers: getAuthHeaders(),
