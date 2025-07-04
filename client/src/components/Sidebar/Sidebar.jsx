@@ -1,8 +1,7 @@
-import React from "react";
-import { Link, useLocation } from "react-router-dom";
-
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useUser } from "../../context/UserContext";
+import { Menu, X } from "lucide-react";
 
 const features = [
   { title: "📊 Dashboard", link: "/dashboard" },
@@ -17,59 +16,98 @@ const features = [
 ];
 
 const Sidebar = ({ isAdmin }) => {
-  const location = useLocation();
-  const navigate = useNavigate();
   const { logout } = useUser();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const [isOpen, setIsOpen] = useState(() => window.innerWidth >= 768);
+
+  // Close sidebar on route change ONLY if open and on small screen
+  useEffect(() => {
+    if (window.innerWidth < 768 && isOpen) {
+      setIsOpen(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname]);
+
+  const toggleSidebar = () => setIsOpen((prev) => !prev);
+
+  const handleLinkClick = (link) => {
+    navigate(link);
+    if (window.innerWidth < 768) setIsOpen(false);
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+    if (window.innerWidth < 768) setIsOpen(false);
+  };
 
   return (
-    <aside className="w-[250px]  sticky top-0 p-5 backdrop-blur-xl bg-gradient-to-b from-green-200 via-blue-300 to-purple-400/80 dark:from-green-900 dark:via-blue-900 dark:to-purple-900/80 border-r border-white/30 dark:border-gray-700 shadow-2xl transition-all duration-500">
-      <div className="mb-10">
-        <h1 className="text-xl font-bold text-indigo-800 dark:text-indigo-300 drop-shadow-md">
-          🎓 AdmissionApp
-        </h1>
-      </div>
+    <>
+      {/* Toggle Button */}
+      <button
+        onClick={toggleSidebar}
+        className="md:hidden fixed top-4 left-4 z-50 bg-indigo-600 text-white p-2 rounded-lg shadow-md"
+        aria-label={isOpen ? "Close sidebar" : "Open sidebar"}
+      >
+        {isOpen ? <X size={22} /> : <Menu size={22} />}
+      </button>
 
-      <ul className="space-y-4">
-        {features.map(({ title, link }) => (
-          <li key={link}>
-            <Link
-              to={link}
-              className={`block px-3 py-2 rounded-lg font-medium transition-all duration-300 ${
-                location.pathname.startsWith(link)
-                  ? "bg-indigo-600 text-white shadow-md"
-                  : "hover:bg-white/40 dark:hover:bg-white/10 hover:text-indigo-900 dark:hover:text-white"
-              }`}
-            >
-              {title}
-            </Link>
-          </li>
-        ))}
-        {
+      {/* Sidebar */}
+      <aside
+        className={`fixed md:static top-0 left-0 z-40 h-screen w-[250px] p-5
+          bg-gradient-to-b from-green-200 via-blue-300 to-purple-400/80
+          dark:from-green-900 dark:via-blue-900 dark:to-purple-900/80
+          border-r border-white/30 dark:border-gray-700
+          shadow-2xl backdrop-blur-xl
+          transition-transform duration-500 ease-in-out will-change-transform
+          ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
+      >
+        <div className="mb-10">
+          <h1 className="text-xl font-bold text-indigo-800 dark:text-indigo-300 drop-shadow-md">
+            🎓 AdmissionApp
+          </h1>
+        </div>
+
+        <ul className="space-y-4">
+          {features.map(({ title, link }) => (
+            <li key={link}>
+              <button
+                onClick={() => handleLinkClick(link)}
+                className={`w-full text-left block px-3 py-2 rounded-lg font-medium transition-all duration-300 ${
+                  location.pathname.startsWith(link)
+                    ? "bg-indigo-600 text-white shadow-md"
+                    : "hover:bg-white/40 dark:hover:bg-white/10 hover:text-indigo-900 dark:hover:text-white"
+                }`}
+              >
+                {title}
+              </button>
+            </li>
+          ))}
+
           <li className="mt-6">
-            <Link
-              onClick={() => {
-                logout();
-                navigate("/login");
-              }}
-              className="block px-3 py-2 rounded-lg bg-orange-400 text-white hover:bg-blue-700 transition font-bold shadow-md"
+            <button
+              onClick={handleLogout}
+              className="w-full text-left px-3 py-2 rounded-lg bg-orange-400 text-white hover:bg-blue-700 transition font-bold shadow-md"
             >
               👤 Logout
-            </Link>
+            </button>
           </li>
-        }
 
-        {isAdmin && (
-          <li className="mt-6">
-            <Link
-              to="/admin"
-              className="block px-3 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition font-bold shadow-md"
-            >
-              🔧 Admin Panel
-            </Link>
-          </li>
-        )}
-      </ul>
-    </aside>
+          {isAdmin && (
+            <li className="mt-6">
+              <button
+                onClick={() => handleLinkClick("/admin")}
+                className="w-full text-left px-3 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition font-bold shadow-md"
+              >
+                🔧 Admin Panel
+              </button>
+            </li>
+          )}
+        </ul>
+      </aside>
+    </>
   );
 };
 
