@@ -1,9 +1,8 @@
 import React from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
-import { useUser } from "../context/UserContext";
 import Home from "../pages/HomePage/Home";
-import DashboardLayout from "../components/DashboardLayout/DashboardLayout";
+import DashboardLayout from "../layout/DashboardLayout/DashboardLayout";
 import NotFound from "../pages/NotFound/NotFound";
 import LoginPage from "../pages/LoginPage/Login";
 import RegisterPage from "../pages/RegisterPage/Register";
@@ -36,6 +35,8 @@ import BulkUpload from "../pages/Admin/BulkUpload";
 import AllQuestions from "../pages/Admin/AllQuestions";
 import AllStudents from "../pages/Admin/AllStudents";
 import AdminRoute from "./AdminRoute";
+import AdminLayout from "../layout/AdminLayout/AdminLayout";
+import ProtectedRoute from "../components/ProtectedRoute/ProtectedRoute";
 
 function AnimatedAppRoutes() {
   const location = useLocation();
@@ -51,7 +52,14 @@ function AnimatedAppRoutes() {
         <Route path="*" element={<NotFound />} />
 
         {/* Main Layout Routes */}
-        <Route element={<DashboardLayout />}>
+        <Route
+          element={
+            <ProtectedRoute>
+              {" "}
+              <DashboardLayout />
+            </ProtectedRoute>
+          }
+        >
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/mock" element={<MockUniversitySelect />} />
           <Route path="/mock/unit/:university" element={<MockUnitSelect />} />
@@ -101,25 +109,21 @@ function AnimatedAppRoutes() {
 
         {/* Admin Protected Routes */}
         <Route
-          path="/admin"
           element={
-            <AdminRoute>
-              <AdminPanel />
-            </AdminRoute>
+            <ProtectedRoute>
+              <AdminRoute>
+                <AdminLayout />{" "}
+              </AdminRoute>
+            </ProtectedRoute>
           }
-        />
-        <Route path="/admin/add-question" element={<AddQuestion />} />
-        <Route path="/admin/bulk-upload" element={<BulkUpload />} />
-        <Route path="/admin/questions" element={<AllQuestions />} />
-        <Route path="/admin/users" element={<AllStudents />} />
-        <Route
-          path="/admin/announcements"
-          element={
-            <AdminRoute>
-              <AdminNoticeManager />
-            </AdminRoute>
-          }
-        />
+        >
+          <Route path="/admin" element={<AdminPanel />} />
+          <Route path="/admin/add-question" element={<AddQuestion />} />
+          <Route path="/admin/bulk-upload" element={<BulkUpload />} />
+          <Route path="/admin/questions" element={<AllQuestions />} />
+          <Route path="/admin/users" element={<AllStudents />} />
+          <Route path="/admin/announcements" element={<AdminNoticeManager />} />
+        </Route>
       </Routes>
     </AnimatePresence>
   );

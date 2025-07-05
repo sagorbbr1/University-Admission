@@ -4,19 +4,8 @@ import { Menu, X } from "lucide-react";
 import { useUser } from "../../context/UserContext";
 import logo from "../../assets/logo.svg";
 
-const features = [
-  { title: "📊 Dashboard", link: "/dashboard" },
-  { title: "⏱️ মক টেস্ট", link: "/mock" },
-  { title: "📚 প্রশ্ন ব্যাংক", link: "/questionbank" },
-  { title: "📊 রেজাল্ট বিশ্লেষণ", link: "/results" },
-  { title: "📥 Mistake Bank", link: "/mistake-bank" },
-  { title: "🔥 ডেইলি চ্যালেঞ্জ", link: "/daily-challenge" },
-  { title: "📣 নোটিশ / আপডেট", link: "/notices" },
-  { title: "💬 আলোচনা ফোরাম", link: "/forum" },
-  { title: "👥 প্রোফাইল", link: "/profile" },
-];
-
-const Sidebar = () => {
+const Sidebar = ({ features }) => {
+  console.log("Rendering Sidebar with features:", features);
   const { logout, user } = useUser();
   const navigate = useNavigate();
   const location = useLocation();

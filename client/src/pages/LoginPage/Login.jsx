@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import api from "../../utils/api.js";
 import { useUser } from "../../context/UserContext.jsx";
 
@@ -9,7 +9,8 @@ import logo from "../../assets/logo.svg";
 export default function LoginPage() {
   const { login } = useUser();
   const navigate = useNavigate();
-
+  const location = useLocation();
+  const from = location.state?.from || "/dashboard";
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -35,7 +36,7 @@ export default function LoginPage() {
       }
 
       login(data);
-      navigate("/dashboard");
+      navigate(from, { replace: true });
     } catch (err) {
       console.error("❌ Login error:", err);
       setError("Something went wrong during login.");

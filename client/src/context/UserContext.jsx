@@ -1,46 +1,40 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 
 const UserContext = createContext();
+export const useUser = () => useContext(UserContext);
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    try {
-      const stored = JSON.parse(localStorage.getItem("user"));
-      if (stored?.user && stored?.token) {
-        setUser(stored.user);
-        setToken(stored.token);
-      } else if (stored?.name && stored?.email && stored?.token) {
-        const { token, ...userWithoutToken } = stored;
-        setUser(userWithoutToken);
-        setToken(token);
-      } else {
-        localStorage.removeItem("user");
-      }
-    } catch {
-      localStorage.removeItem("user");
+    const savedUser = localStorage.getItem("user");
+
+    if (savedUser) {
+      const parsed = JSON.parse(savedUser);
+      setUser(parsed);
+      setToken(parsed.token); // ✅ token comes from inside user object
     }
+
+    setLoading(false);
   }, []);
 
   const login = (userData) => {
-    localStorage.setItem("user", JSON.stringify(userData));
-    setUser(userData.user || userData);
+    setUser(userData);
     setToken(userData.token);
+    localStorage.setItem("user", JSON.stringify(userData)); // ✅ one object
   };
 
   const logout = () => {
-    localStorage.removeItem("user");
     setUser(null);
     setToken(null);
+    localStorage.removeItem("user");
   };
 
   return (
-    <UserContext.Provider value={{ user, token, login, logout }}>
+    <UserContext.Provider value={{ user, token, login, logout, loading }}>
       {children}
     </UserContext.Provider>
   );
 };
-
-export const useUser = () => useContext(UserContext);
