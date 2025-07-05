@@ -55,13 +55,26 @@ const AdminNoticeManager = () => {
   };
 
   return (
-    <div className="min-h-screen p-8 bg-gradient-to-b from-indigo-50 to-white dark:from-gray-900 dark:to-black text-gray-900 dark:text-gray-100">
+    <div
+      className="min-h-screen p-8 text-gray-900 dark:text-gray-100"
+      style={{
+        background: "linear-gradient(135deg, #e0f7fa, #e1bee7, #f3e5f5)",
+      }}
+    >
       <h1 className="text-3xl font-bold mb-6 text-center text-indigo-700 dark:text-indigo-300">
         🧑‍💼 Admin Notice Manager
       </h1>
 
-      {/* Form */}
-      <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md space-y-4 max-w-2xl mx-auto mb-10">
+      {/* Form with glassy effect */}
+      <div
+        className="p-6 rounded-2xl shadow-md space-y-4 max-w-2xl mx-auto mb-10"
+        style={{
+          background: "rgba(255, 255, 255, 0.3)",
+          backdropFilter: "blur(10px)",
+          WebkitBackdropFilter: "blur(10px)",
+          border: "1px solid rgba(255, 255, 255, 0.4)",
+        }}
+      >
         <input
           type="text"
           name="title"
@@ -86,7 +99,7 @@ const AdminNoticeManager = () => {
         </button>
       </div>
 
-      {/* Notices */}
+      {/* Notices list */}
       <div className="max-w-4xl mx-auto space-y-4">
         <h2 className="text-xl font-bold mb-2">📃 Published Notices</h2>
         {loading ? (
@@ -97,7 +110,13 @@ const AdminNoticeManager = () => {
           notices.map((notice) => (
             <div
               key={notice._id}
-              className="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-md border border-gray-200 dark:border-gray-700"
+              className="p-5 rounded-xl shadow-md border"
+              style={{
+                background: "rgba(255, 255, 255, 0.3)",
+                backdropFilter: "blur(10px)",
+                WebkitBackdropFilter: "blur(10px)",
+                borderColor: "rgba(255, 255, 255, 0.4)",
+              }}
             >
               <div className="flex justify-between items-center mb-1">
                 <h3 className="text-lg font-semibold">{notice.title}</h3>

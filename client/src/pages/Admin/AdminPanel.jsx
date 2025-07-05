@@ -8,8 +8,6 @@ const adminSections = [
   { label: "👥 All Students", path: "/admin/users" },
   { label: "📊 Mock Test Results", path: "/admin/mock-results" },
   { label: "🔍 Mistake Overview", path: "/admin/mistakes" },
-  { label: "🏫 University Setup", path: "/admin/universities" },
-  { label: "🧪 Unit Setup", path: "/admin/units" },
   { label: "📢 Announcements", path: "/admin/announcements" },
   { label: "🚪 Logout", path: "/" },
 ];
