@@ -93,7 +93,7 @@ const AdminNoticeManager = () => {
         />
         <button
           onClick={handlePublish}
-          className="bg-green-600 hover:bg-green-700 px-5 py-3 rounded-xl text-white font-semibold shadow-md transition"
+          className="bg-purple-600 hover:bg-purple-700 px-5 py-3 rounded-xl text-white font-semibold shadow-md transition"
         >
           ✅ Publish Notice
         </button>

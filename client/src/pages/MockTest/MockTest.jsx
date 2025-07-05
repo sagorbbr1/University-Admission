@@ -137,7 +137,7 @@ const MockTest = () => {
                     className={`py-2 px-4 rounded-lg border transition-colors font-medium text-gray-900 dark:text-white
                       ${
                         answers[q._id] === opt
-                          ? "bg-green-600 border-green-600 text-white shadow-lg shadow-green-500/70"
+                          ? "bg-purple-600 border-purple-600 text-white shadow-lg shadow-purple-500/70"
                           : "bg-white/60 border-white/50 hover:bg-white/80 dark:hover:bg-white/30 hover:shadow-md hover:shadow-white/40"
                       }`}
                   >
@@ -152,7 +152,7 @@ const MockTest = () => {
         <div className="mt-8 text-center">
           <button
             onClick={handleSubmit}
-            className="w-full py-3 bg-green-600 hover:bg-green-700 transition rounded-xl font-semibold text-white shadow-lg"
+            className="w-full py-3 bg-purple-600 hover:bg-purple-700 transition rounded-xl font-semibold text-white shadow-lg"
           >
             ✅ সাবমিট করুন
           </button>

@@ -67,7 +67,7 @@ const MockConfig = () => {
 
           <button
             onClick={handleStart}
-            className="w-full py-4 rounded-2xl bg-gradient-to-r from-green-400 to-green-600 text-white font-bold shadow-md hover:shadow-xl hover:scale-[1.02] transition duration-300"
+            className="w-full py-4 rounded-2xl bg-gradient-to-r from-purple-400 to-purple-600 text-white font-bold shadow-md hover:shadow-xl hover:scale-[1.02] transition duration-300"
           >
             ✅ মক টেস্ট শুরু করুন
           </button>

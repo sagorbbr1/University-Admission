@@ -199,8 +199,11 @@ const Profile = () => {
             {!isEditing ? (
               <button
                 type="button"
-                onClick={() => setIsEditing(true)}
-                className="px-16 py-4 rounded-3xl bg-indigo-600 text-white text-2xl font-semibold hover:bg-indigo-700 transition"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsEditing(true);
+                }}
+                className="px-8 py-2 rounded-3xl bg-purple-600 text-white text-xl font-semibold hover:bg-purple-700 transition"
               >
                 Edit Profile
               </button>
@@ -208,7 +211,7 @@ const Profile = () => {
               <>
                 <button
                   type="submit"
-                  className="px-16 py-4 rounded-3xl bg-green-600 text-white text-2xl font-semibold hover:bg-green-700 transition"
+                  className="px-8 py-2 rounded-3xl bg-purple-600 text-white text-xl font-semibold hover:bg-purple-700 transition"
                 >
                   Save Changes
                 </button>

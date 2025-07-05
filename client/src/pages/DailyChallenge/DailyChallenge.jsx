@@ -261,7 +261,7 @@ const DailyChallenge = () => {
             </button>
           ) : (
             <div className="mt-8 text-center">
-              <p className="text-green-600 text-xl font-bold">
+              <p className="text-purple-600 text-xl font-bold">
                 🎉 You got {correctCount} / {questions.length} correct!
               </p>
               <p className="text-gray-700">
