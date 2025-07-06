@@ -32,6 +32,7 @@ const AddQuestion = () => {
         setQuestionForm({
           university: "",
           unit: "",
+          sub: "",
           year: "",
           question: "",
           options: ["", "", "", ""],
@@ -76,6 +77,15 @@ const AddQuestion = () => {
                 name="unit"
                 placeholder="Unit"
                 value={questionForm.unit}
+                onChange={handleChange}
+                className="styled-input border-l-4 border-cyan-500"
+                required
+              />
+              <input
+                type="text"
+                name="sub"
+                placeholder="Subject"
+                value={questionForm.sub}
                 onChange={handleChange}
                 className="styled-input border-l-4 border-cyan-500"
                 required

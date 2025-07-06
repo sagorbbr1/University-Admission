@@ -121,7 +121,7 @@ const Profile = () => {
   return (
     <div className="min-h-screen flex justify-center items-start bg-gradient-to-br from-green-200 via-blue-300 to-purple-400 dark:from-green-900 dark:via-blue-900 dark:to-purple-900 py-12 px-6">
       <div className="w-full max-w-4xl bg-white/30 dark:bg-gray-900/40 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/30 dark:border-gray-700/50 p-12 text-gray-900 dark:text-white overflow-hidden">
-        <h2 className="text-5xl font-extrabold mb-12 text-center tracking-wide">
+        <h2 className="text-3xl font-extrabold mb-12 text-center tracking-wide">
           প্রোফাইল তথ্য
         </h2>
 

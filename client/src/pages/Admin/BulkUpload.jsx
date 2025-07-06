@@ -27,7 +27,7 @@ const BulkUpload = () => {
     <div className="min-h-screen bg-gradient-to-br from-[#e0f7fa] via-[#e1bee7] to-[#f3e5f5] px-6 py-12 flex items-center justify-center text-gray-800">
       <div className="max-w-3xl w-full bg-white/30 backdrop-blur-lg border border-white/40 shadow-2xl rounded-3xl p-10">
         <div className="flex items-center gap-3 mb-6">
-          <UploadCloud size={30} className="text-cyan-700" />
+          <UploadCloud size={30} className="text-purple-700" />
           <h2 className="text-3xl font-bold text-cyan-700">
             Bulk Upload Questions
           </h2>
@@ -40,7 +40,7 @@ const BulkUpload = () => {
 
         <label
           htmlFor="bulk-upload"
-          className="w-full inline-flex items-center justify-center gap-3 px-6 py-4 bg-cyan-600 hover:bg-cyan-700 text-white rounded-xl font-semibold shadow-md transition cursor-pointer"
+          className="w-full inline-flex items-center justify-center gap-3 px-6 py-4 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-semibold shadow-md transition cursor-pointer"
         >
           📁 Select File to Upload
           <input

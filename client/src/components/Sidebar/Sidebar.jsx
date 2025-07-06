@@ -67,7 +67,7 @@ const Sidebar = ({ features }) => {
               <button
                 onClick={() => handleLinkClick(link)}
                 className={`w-full text-left block px-3 py-2 rounded-lg font-medium transition-all duration-300 ${
-                  location.pathname.startsWith(link)
+                  location.pathname === link
                     ? "bg-purple-600 text-white shadow-md"
                     : "hover:bg-white/40 dark:hover:bg-white/10 hover:text-indigo-900 dark:hover:text-white"
                 }`}

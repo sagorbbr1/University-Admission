@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../../utils/api.js";
 import { useUser } from "../../context/UserContext.jsx";
 import logo from "../../assets/logo.svg"; // ✅ Logo import
+import { toast, ToastContainer } from "react-toastify";
 
 export default function RegisterPage() {
   const { login } = useUser();
@@ -40,10 +41,11 @@ export default function RegisterPage() {
       }
 
       login(data);
+      toast.success("Registration successful! Redirecting to dashboard...");
       navigate("/dashboard");
     } catch (err) {
       setError("Something went wrong while registering.");
-      console.error("❌ Registration error:", err);
+      toast.error("Registration failed. Please try again.");
     }
   };
 
@@ -67,7 +69,7 @@ export default function RegisterPage() {
             name="name"
             value={form.name}
             onChange={handleChange}
-            placeholder="John Doe"
+            placeholder="Your Name"
           />
           <Input
             label="Email"
@@ -75,7 +77,7 @@ export default function RegisterPage() {
             type="email"
             value={form.email}
             onChange={handleChange}
-            placeholder="you@example.com"
+            placeholder="Your Email"
           />
           <Input
             label="Phone Number"
@@ -89,14 +91,14 @@ export default function RegisterPage() {
             name="collegeName"
             value={form.collegeName}
             onChange={handleChange}
-            placeholder="Dhaka College"
+            placeholder="Rajshahi College"
           />
           <Input
             label="District"
             name="district"
             value={form.district}
             onChange={handleChange}
-            placeholder="Dhaka"
+            placeholder="Rajshahi"
           />
           <Input
             label="Password"

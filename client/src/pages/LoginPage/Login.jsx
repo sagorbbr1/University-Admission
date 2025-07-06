@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import api from "../../utils/api.js";
 import { useUser } from "../../context/UserContext.jsx";
+import { toast, ToastContainer } from "react-toastify";
 
 // 🔥 Import your logo
 import logo from "../../assets/logo.svg";
@@ -37,8 +38,9 @@ export default function LoginPage() {
 
       login(data);
       navigate(from, { replace: true });
+      toast.success("Login successful! Redirecting...");
     } catch (err) {
-      console.error("❌ Login error:", err);
+      toast.error("Login failed. Please check your credentials.");
       setError("Something went wrong during login.");
     }
   };
