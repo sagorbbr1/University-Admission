@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import api from "../../utils/api";
-import Spinner from "../../components/Spninner/Spinner";
+import Spinner from "../../components/Spinner/Spinner";
 
 const QuestionDisplay = () => {
   const { university, unit, year } = useParams();

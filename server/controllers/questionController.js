@@ -52,6 +52,7 @@ const bulkUpload = async (req, res) => {
     return res.status(400).json({ message: "❌ No file uploaded" });
   }
 
+  console.log(req.file);
   const filePath = path.join(__dirname, "..", req.file.path);
   const questions = [];
 
@@ -74,6 +75,7 @@ const bulkUpload = async (req, res) => {
           option3,
           option4,
           answer,
+          explanation,
         } = row;
 
         if (
@@ -101,6 +103,7 @@ const bulkUpload = async (req, res) => {
               option4.trim(),
             ],
             answer: answer.trim(),
+            explanation: explanation.trim(),
           });
         }
       })

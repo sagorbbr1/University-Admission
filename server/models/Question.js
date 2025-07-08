@@ -9,6 +9,7 @@ const questionSchema = new mongoose.Schema(
     question: { type: String, required: true },
     options: [{ type: String }],
     answer: { type: String, required: true },
+    explanation: { type: String },
   },
   { timestamps: true }
 );

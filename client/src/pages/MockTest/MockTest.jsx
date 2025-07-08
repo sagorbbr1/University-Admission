@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import api from "../../utils/api";
-import Spinner from "../../components/Spninner/Spinner";
+import Spinner from "../../components/Spinner/Spinner";
 
 const MockTest = () => {
   const { university: paramUniversity, unit: paramUnit } = useParams();

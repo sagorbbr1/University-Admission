@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import api from "../../utils/api";
+import Spinner from "../../components/Spinner/Spinner";
 
 const QUESTIONS_PER_PAGE = 10;
 
@@ -119,7 +120,7 @@ const AllQuestions = () => {
 
       {/* Table */}
       {filteredQuestions.length === 0 ? (
-        <p className="text-center text-gray-500">No questions found.</p>
+        <Spinner />
       ) : (
         <>
           <div className="overflow-x-auto rounded-3xl shadow-2xl backdrop-blur-lg bg-white/30 border border-white/40">

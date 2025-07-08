@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../utils/api"; // Adjust if needed
-import Spinner from "../../components/Spninner/Spinner";
+import Spinner from "../../components/Spinner/Spinner";
 
 const UniversitySelect = () => {
   const [universities, setUniversities] = useState([]);

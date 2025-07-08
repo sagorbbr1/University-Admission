@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../../utils/api";
-import Spinner from "../../components/Spninner/Spinner";
+import Spinner from "../../components/Spinner/Spinner";
 
 const UnitSelect = () => {
   const navigate = useNavigate();

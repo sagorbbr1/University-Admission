@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import api from "../../utils/api.js";
 import { useUser } from "../../context/UserContext.jsx";
-import Spinner from "../../components/Spninner/Spinner.jsx";
+import Spinner from "../../components/Spinner/Spinner.jsx";
 import NotLoggedInPrompt from "../../components/NotLoggedInPrompt/NotLoggedInPrompt.jsx";
 
 const Profile = () => {

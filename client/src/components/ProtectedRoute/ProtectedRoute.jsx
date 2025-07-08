@@ -1,7 +1,7 @@
 import React from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useUser } from "../../context/UserContext";
-import Spinner from "../Spninner/Spinner";
+import Spinner from "../Spinner/Spinner";
 
 const ProtectedRoute = ({ children }) => {
   const { user, token, loading } = useUser();
