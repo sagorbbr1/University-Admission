@@ -86,7 +86,7 @@ const AllQuestions = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#f0f4ff] via-[#e3e8f0] to-[#f3e5f5] p-6 text-gray-900">
       <h1 className="text-4xl font-extrabold text-center mb-10 bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-purple-600">
-        📋 All Questions
+        📋 All Questions ({questions && questions.length})
       </h1>
 
       {/* Filters */}

@@ -5,7 +5,6 @@ import { useUser } from "../../context/UserContext";
 import logo from "../../assets/logo.svg";
 
 const Sidebar = ({ features }) => {
-  console.log("Rendering Sidebar with features:", features);
   const { logout, user } = useUser();
   const navigate = useNavigate();
   const location = useLocation();

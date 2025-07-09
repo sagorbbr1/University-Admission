@@ -8,7 +8,6 @@ const generateToken = (id) => {
 };
 
 const register = async (req, res) => {
-  console.log("Register request body:", req.body);
   try {
     const { name, email, password, phone, collegeName, district } = req.body;
 

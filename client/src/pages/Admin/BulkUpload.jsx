@@ -1,6 +1,7 @@
 import React from "react";
 import { UploadCloud } from "lucide-react";
 import api from "../../utils/api.js";
+import { toast, ToastContainer } from "react-toastify";
 
 const BulkUpload = () => {
   const handleBulkUpload = async (e) => {
@@ -14,7 +15,7 @@ const BulkUpload = () => {
       const res = await api.post("/questions/bulk", formData, true);
 
       if (res.status === 200) {
-        alert("📂 Bulk upload successful!");
+        toast.success(`${res.data.message}`);
       } else {
         alert(`❌ Bulk upload failed: ${res.data?.message || "Unknown error"}`);
       }
@@ -25,6 +26,7 @@ const BulkUpload = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#e0f7fa] via-[#e1bee7] to-[#f3e5f5] px-6 py-12 flex items-center justify-center text-gray-800">
+      <ToastContainer />
       <div className="max-w-3xl w-full bg-white/30 backdrop-blur-lg border border-white/40 shadow-2xl rounded-3xl p-10">
         <div className="flex items-center gap-3 mb-6">
           <UploadCloud size={30} className="text-purple-700" />
