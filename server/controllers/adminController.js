@@ -4,8 +4,25 @@ const MockTestResult = require("../models/MockTestResult");
 const { Parser } = require("json2csv");
 
 const getAllQuestions = async (req, res) => {
-  const questions = await Question.find().sort({ createdAt: -1 });
-  res.json(questions);
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+
+    const total = await Question.countDocuments({});
+    const questions = await Question.find({})
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    res.json({
+      questions,
+      total,
+      currentPage: page,
+      totalPages: Math.ceil(total / limit),
+    });
+  } catch (error) {
+    console.error("Error fetching questions:", error);
+    res.status(500).json({ message: "Server error" });
+  }
 };
 
 const deleteQuestion = async (req, res) => {
