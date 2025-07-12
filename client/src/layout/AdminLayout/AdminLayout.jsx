@@ -11,6 +11,8 @@ const AdminLayout = () => {
     { title: "➕ Add Question", link: "/admin/add-question" },
     { title: "📁 Bulk Upload", link: "/admin/bulk-upload" },
     { title: "📝 All Questions", link: "/admin/questions" },
+    { title: "🗑️ Delete Questions", link: "/admin/delete-questions" },
+    { title: "📊 Statistics", link: "/admin/statistics" },
     { title: "👥 All Students", link: "/admin/users" },
     { title: "📢 Announcements", link: "/admin/announcements" },
   ];

@@ -37,6 +37,7 @@ import AllStudents from "../pages/Admin/AllStudents";
 import AdminRoute from "./AdminRoute";
 import AdminLayout from "../layout/AdminLayout/AdminLayout";
 import ProtectedRoute from "../components/ProtectedRoute/ProtectedRoute";
+import DeleteQuestionsPanel from "../pages/Admin/DeleteQuestionsPanel";
 
 function AnimatedAppRoutes() {
   const location = useLocation();
@@ -122,6 +123,10 @@ function AnimatedAppRoutes() {
           <Route path="/admin/bulk-upload" element={<BulkUpload />} />
           <Route path="/admin/questions" element={<AllQuestions />} />
           <Route path="/admin/users" element={<AllStudents />} />
+          <Route
+            path="/admin/delete-questions"
+            element={<DeleteQuestionsPanel />}
+          />
           <Route path="/admin/announcements" element={<AdminNoticeManager />} />
         </Route>
       </Routes>

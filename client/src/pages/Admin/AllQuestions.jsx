@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import api from "../../utils/api";
 import Spinner from "../../components/Spinner/Spinner";
 
-const QUESTIONS_PER_PAGE = 20;
+const QUESTIONS_PER_PAGE = 100;
 
 const AllQuestions = () => {
   const [questions, setQuestions] = useState([]);

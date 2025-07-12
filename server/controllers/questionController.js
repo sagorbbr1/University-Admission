@@ -266,6 +266,27 @@ const getQuestionsByUniversityUnit = async (req, res) => {
   }
 };
 
+const deleteQuestionsByUniversityUnitYear = async (req, res) => {
+  try {
+    const { university, unit, year } = req.body;
+
+    if (!university || !unit || !year) {
+      return res
+        .status(400)
+        .json({ message: "❌ university, unit, and year are required" });
+    }
+
+    const result = await Question.deleteMany({ university, unit, year });
+
+    res.status(200).json({
+      message: `✅ Deleted ${result.deletedCount} questions for university '${university}', unit '${unit}', year '${year}'`,
+    });
+  } catch (error) {
+    console.error("❌ Error while deleting questions:", error);
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
 module.exports = {
   addQuestion,
   bulkUpload,
@@ -274,4 +295,5 @@ module.exports = {
   getYearsByUniversityAndUnit,
   getQuestionsByUniversityUnitYear,
   getQuestionsByUniversityUnit,
+  deleteQuestionsByUniversityUnitYear,
 };

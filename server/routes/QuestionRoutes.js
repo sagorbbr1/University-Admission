@@ -11,6 +11,7 @@ const {
   getYearsByUniversityAndUnit,
   getQuestionsByUniversityUnitYear,
   getQuestionsByUniversityUnit,
+  deleteQuestionsByUniversityUnitYear,
 } = require("../controllers/questionController");
 
 // Manual add
@@ -35,5 +36,11 @@ router.get("/mock/:university/:unit", getQuestionsByUniversityUnit);
 
 //Get questions by university, unit, and year
 router.get("/:university/:unit/:year", getQuestionsByUniversityUnitYear);
+
+// delete questions by university, unit, and year
+router.post(
+  "/delete-by-university-unit-year",
+  deleteQuestionsByUniversityUnitYear
+);
 
 module.exports = router;
